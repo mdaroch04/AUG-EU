@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 Days in Europe — Milan Loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --ink: #1a1a2e;
+  --cream: #f5f0e8;
+  --parchment: #ede8dc;
+  --rust: #b5451b;
+  --gold: #c9963a;
+  --sage: #4a7c59;
+  --slate: #3d5a73;
+  --mist: #8fa8bc;
+  --warm: #9a9080;
+  --white: #ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+img{display:block;width:100%;height:100%;object-fit:cover;}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;transition:background .3s,padding .3s;}
+#nav.scrolled{background:rgba(26,26,46,.95);backdrop-filter:blur(10px);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,.75);font-style:italic;}
+.nav-links{display:flex;gap:20px;list-style:none;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:rgba(255,255,255,.85);}
+/* hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:22px;height:2px;background:rgba(255,255,255,.7);border-radius:2px;transition:all .3s;}
+.mob-menu{display:none;position:fixed;inset:0;background:var(--ink);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:36px;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'Playfair Display',serif;font-size:28px;color:rgba(255,255,255,.8);text-decoration:none;font-style:italic;}
+.mob-close{position:absolute;top:20px;right:24px;font-size:28px;color:rgba(255,255,255,.5);cursor:pointer;font-family:monospace;}
+@media(max-width:680px){.nav-links{display:none;}.hamburger{display:flex;}}
+
+/* ── HERO ── */
+.hero{min-height:100svh;background:var(--ink);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:80px 24px 60px;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 80%,rgba(181,69,27,.18) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 20%,rgba(61,90,115,.25) 0%,transparent 60%);}
+.hero-mountains{position:absolute;bottom:0;left:0;right:0;height:160px;opacity:.07;}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:700px;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp 1s ease .2s both;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(48px,12vw,110px);font-weight:900;color:#fff;line-height:.92;letter-spacing:-.02em;margin-bottom:6px;opacity:0;animation:fadeUp 1s ease .35s both;}
+.hero-title span{color:var(--gold);font-style:italic;}
+.hero-sub{font-family:'Playfair Display',serif;font-size:clamp(13px,2.5vw,19px);font-style:italic;color:var(--mist);margin-top:20px;margin-bottom:40px;line-height:1.55;opacity:0;animation:fadeUp 1s ease .5s both;}
+.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s ease .65s both;}
+.pill{padding:6px 16px;border:1px solid rgba(255,255,255,.13);border-radius:100px;font-size:11px;color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.22);font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.25em;animation:pulse 2.5s ease-in-out infinite;}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.22),transparent);}
+
+/* ── SHARED ── */
+section{padding:72px 24px;}
+.inner{max-width:1100px;margin:0 auto;}
+.inner-narrow{max-width:840px;margin:0 auto;}
+.s-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.35em;text-transform:uppercase;margin-bottom:12px;}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,46px);font-weight:700;line-height:1.1;margin-bottom:48px;}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── MAP ── */
+.map-section{background:var(--ink);padding:72px 0 0;}
+.map-header{padding:0 24px 40px;}
+.map-section .s-label{color:var(--gold);}
+.map-section .s-title{color:#fff;margin-bottom:0;}
+#tripMap{width:100%;height:460px;}
+@media(max-width:680px){#tripMap{height:320px;}}
+.map-legend{display:flex;flex-wrap:wrap;gap:10px;padding:20px 24px;background:rgba(255,255,255,.04);}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:rgba(255,255,255,.5);}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── ROUTE ── */
+.route-section{background:var(--ink);padding:72px 24px;}
+.route-section .s-label{color:var(--gold);}
+.route-section .s-title{color:#fff;}
+.route-list{position:relative;display:flex;flex-direction:column;}
+.route-list::before{content:'';position:absolute;left:18px;top:20px;bottom:20px;width:1px;background:linear-gradient(to bottom,var(--rust),var(--gold),var(--sage),var(--slate),var(--sage),var(--rust));opacity:.35;}
+.r-stop{display:flex;gap:18px;align-items:flex-start;padding:8px 0;}
+.r-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:8px;font-weight:500;position:relative;z-index:1;border:1.5px solid;}
+.d-it{background:rgba(181,69,27,.14);border-color:var(--rust);color:var(--rust);}
+.d-at{background:rgba(61,90,115,.14);border-color:var(--slate);color:var(--slate);}
+.d-de{background:rgba(201,150,58,.14);border-color:var(--gold);color:var(--gold);}
+.d-ch{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.6);}
+.d-si{background:rgba(74,124,89,.14);border-color:var(--sage);color:var(--sage);}
+.r-info{flex:1;padding:4px 0;}
+.r-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:1px;}
+.r-meta{font-size:11px;color:var(--mist);line-height:1.4;}
+.r-badge{font-family:'DM Mono',monospace;font-size:8px;color:var(--warm);padding:2px 8px;border:1px solid rgba(255,255,255,.07);border-radius:3px;align-self:center;white-space:nowrap;flex-shrink:0;}
+@media(max-width:480px){.r-badge{display:none;}}
+
+/* ── PHOTO GRID ── */
+.photos-section{background:var(--cream);padding:72px 24px;}
+.photos-section .s-label{color:var(--rust);}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+.p-card{position:relative;overflow:hidden;background:#222;cursor:pointer;}
+.p-card.wide{grid-column:span 2;}
+.p-card img{min-height:200px;transition:transform .7s cubic-bezier(.25,.46,.45,.94),opacity .3s;opacity:.82;}
+.p-card:hover img{transform:scale(1.06);opacity:1;}
+.p-card .p-card-img{width:100%;height:100%;object-fit:cover;aspect-ratio:auto;}
+.p-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,20,.9) 0%,rgba(10,8,20,.15) 50%,transparent 100%);}
+.p-content{position:absolute;bottom:0;left:0;right:0;padding:18px 18px 16px;transform:translateY(5px);transition:transform .3s;}
+.p-card:hover .p-content{transform:translateY(0);}
+.p-country{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.p-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:3px;}
+.p-card.wide .p-name{font-size:26px;}
+.p-days{font-size:10px;color:rgba(255,255,255,.48);}
+.p-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px;opacity:0;transform:translateY(4px);transition:all .3s .04s;}
+.p-card:hover .p-tags{opacity:1;transform:translateY(0);}
+.ptag{padding:2px 7px;background:rgba(255,255,255,.1);border-radius:100px;font-size:8px;color:rgba(255,255,255,.7);}
+/* mobile: stack wide cards */
+@media(max-width:600px){
+  .photo-grid{grid-template-columns:1fr 1fr;}
+  .p-card.wide{grid-column:span 2;}
+  .p-card img{min-height:160px;}
+}
+@media(max-width:400px){
+  .photo-grid{grid-template-columns:1fr;}
+  .p-card.wide{grid-column:span 1;}
+}
+
+/* ── DESTINATIONS DETAIL ── */
+.dest-detail-section{background:var(--parchment);padding:72px 24px;}
+.dest-detail-section .s-label{color:var(--slate);}
+.dest-cards-list{display:flex;flex-direction:column;gap:3px;}
+.dest-card-big{display:grid;grid-template-columns:280px 1fr;overflow:hidden;background:#fff;border-radius:0;}
+.dest-card-big:first-child{border-radius:12px 12px 0 0;}
+.dest-card-big:last-child{border-radius:0 0 12px 12px;}
+.dest-card-big:only-child{border-radius:12px;}
+.dc-photo{position:relative;overflow:hidden;min-height:200px;}
+.dc-photo img{width:100%;height:100%;object-fit:cover;min-height:200px;transition:transform .6s ease;}
+.dest-card-big:hover .dc-photo img{transform:scale(1.04);}
+.dc-photo-over{position:absolute;inset:0;background:linear-gradient(to right,rgba(10,8,20,.25),transparent);}
+.dc-body{padding:22px 24px;display:flex;flex-direction:column;justify-content:center;}
+.dc-country{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.dc-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.1;}
+.dc-dates{font-size:11px;color:var(--warm);margin-bottom:10px;font-family:'DM Mono',monospace;letter-spacing:.05em;}
+.dc-desc{font-size:12px;color:#4a4a4a;line-height:1.6;margin-bottom:12px;}
+.dc-highlights{display:flex;flex-wrap:wrap;gap:5px;}
+.dc-tag{padding:3px 9px;border-radius:100px;font-size:9px;letter-spacing:.04em;}
+.dc-tag.hike{background:rgba(74,124,89,.12);color:var(--sage);}
+.dc-tag.sight{background:rgba(61,90,115,.1);color:var(--slate);}
+.dc-tag.food{background:rgba(201,150,58,.12);color:#8a6a10;}
+@media(max-width:640px){
+  .dest-card-big{grid-template-columns:1fr;}
+  .dc-photo{min-height:180px;}
+  .dc-photo img{min-height:180px;}
+}
+
+/* ── ITINERARY ── */
+.itin-section{background:var(--cream);padding:72px 24px;}
+.itin-section .s-label{color:var(--sage);}
+.phase{margin-bottom:44px;}
+.phase-hdr{display:flex;align-items:center;gap:14px;margin-bottom:5px;}
+.phase-num{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--warm);}
+.phase-line{flex:1;height:1px;background:rgba(0,0,0,.1);}
+.phase-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.phase-desc{font-size:11px;color:var(--warm);margin-bottom:14px;}
+.days-list{display:flex;flex-direction:column;gap:2px;}
+.day-row{display:grid;grid-template-columns:58px 150px 1fr;background:#fff;transition:box-shadow .2s;}
+.day-row:first-child{border-radius:10px 10px 0 0;}
+.day-row:last-child{border-radius:0 0 10px 10px;}
+.day-row:only-child{border-radius:10px;}
+.day-row:hover{box-shadow:0 3px 16px rgba(0,0,0,.08);position:relative;z-index:1;}
+.d-num{padding:14px 10px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--warm);border-right:1px solid rgba(0,0,0,.05);}
+.d-loc{padding:14px 16px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(0,0,0,.05);}
+.d-loc-name{font-weight:500;font-size:12px;color:var(--ink);}
+.d-loc-tag{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.16em;color:var(--warm);margin-top:1px;}
+.d-act{padding:14px 18px;font-size:11px;color:#4a4a4a;line-height:1.5;display:flex;align-items:center;gap:8px;}
+.badge{display:inline-block;padding:2px 6px;border-radius:3px;font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;flex-shrink:0;}
+.b-train{background:#e8f0fb;color:#2e5fa3;}
+.b-car{background:#fdf0e8;color:#b5451b;}
+.b-walk{background:#e8f0eb;color:var(--sage);}
+.b-bus{background:#f0e8fb;color:#6b4aa0;}
+.b-arr{background:#fdf8e8;color:#8a6a10;}
+@media(max-width:580px){
+  .day-row{grid-template-columns:46px 1fr;}
+  .d-loc{display:none;}
+  .d-act{padding:12px 14px;font-size:10px;}
+  .d-num{font-size:9px;padding:12px 6px;}
+}
+
+/* ── HIKES ── */
+.hikes-section{background:var(--ink);padding:72px 24px;position:relative;overflow:hidden;}
+.hikes-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 90% 50%,rgba(74,124,89,.1) 0%,transparent 60%);}
+.hikes-section .s-label{color:var(--sage);}
+.hikes-section .s-title{color:#fff;}
+.hikes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.hike-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:22px 20px;transition:background .3s,transform .3s;}
+.hike-card:hover{background:rgba(255,255,255,.07);transform:translateY(-3px);}
+.hk-icon{font-size:24px;margin-bottom:10px;}
+.hk-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.2;}
+.hk-loc{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.18em;color:var(--sage);text-transform:uppercase;margin-bottom:8px;}
+.hk-desc{font-size:10px;color:rgba(255,255,255,.46);line-height:1.6;}
+.hk-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;}
+.hb{padding:2px 8px;border-radius:100px;font-size:9px;}
+.hb-easy{background:rgba(74,124,89,.2);color:#7dbf8e;}
+.hb-mod{background:rgba(201,150,58,.2);color:var(--gold);}
+.hb-full{background:rgba(181,69,27,.2);color:#e0896a;}
+.hb-half{background:rgba(61,90,115,.2);color:var(--mist);}
+
+/* ── BUDGET ── */
+.budget-section{background:var(--cream);padding:72px 24px;}
+.budget-section .s-label{color:var(--gold);}
+.budget-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:28px;}
+.bcard{background:#fff;border-radius:12px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.bcard-icon{font-size:20px;margin-bottom:9px;}
+.bcard-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.22em;text-transform:uppercase;color:var(--warm);margin-bottom:4px;}
+.bcard-amount{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);}
+.bcard-note{font-size:10px;color:var(--warm);margin-top:4px;line-height:1.4;}
+.budget-total{background:var(--ink);border-radius:12px;padding:26px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.bt-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);}
+.bt-sub{font-size:10px;color:rgba(143,168,188,.55);margin-top:2px;}
+.bt-amount{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--gold);}
+.bt-range{font-size:10px;color:rgba(143,168,188,.55);margin-top:2px;}
+
+/* ── TIPS ── */
+.tips-section{background:var(--parchment);padding:72px 24px;}
+.tips-section .s-label{color:var(--rust);}
+.tips-cols{display:grid;grid-template-columns:1fr 1fr;gap:36px;}
+@media(max-width:580px){.tips-cols{grid-template-columns:1fr;}}
+.tip-group{margin-bottom:28px;}
+.tip-gtitle{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.08);}
+.tip-item{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:11px;line-height:1.5;color:#4a4a4a;}
+.tip-item:last-child{border-bottom:none;}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);padding:52px 24px;text-align:center;}
+.ft{font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:rgba(255,255,255,.15);margin-bottom:8px;}
+.ft-note{font-size:10px;color:rgba(255,255,255,.15);font-family:'DM Mono',monospace;letter-spacing:.1em;margin-top:4px;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:.2;}50%{opacity:.6;}}
+
+/* ── HIKE SLIDERS ── */
+.hike-slider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+.hs-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;}
+.hs-slider{position:relative;aspect-ratio:4/3;overflow:hidden;background:#111;cursor:grab;user-select:none;}
+.hs-slider:active{cursor:grabbing;}
+.hs-track{display:flex;width:300%;height:100%;transition:transform .4s cubic-bezier(.25,.46,.45,.94);}
+.hs-slide{flex:0 0 33.333%;height:100%;position:relative;}
+.hs-slide img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.hs-slide-label{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.7);}
+.hs-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2;}
+.hs-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .25s,transform .25s;cursor:pointer;}
+.hs-dot.active{background:#fff;transform:scale(1.2);}
+.hs-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:3;transition:background .2s;backdrop-filter:blur(4px);}
+.hs-arrow:hover{background:rgba(0,0,0,.65);}
+.hs-prev{left:8px;}.hs-next{right:8px;}
+.hs-body{padding:18px 18px 20px;flex:1;display:flex;flex-direction:column;}
+.hs-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;}
+.hs-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.2;}
+.hs-badges{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;}
+.hs-loc{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.18em;color:var(--sage);text-transform:uppercase;margin-bottom:10px;}
+.hs-desc{font-size:11px;color:rgba(255,255,255,.48);line-height:1.6;flex:1;}
+.hs-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;margin-top:14px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden;}
+.hs-stat{background:rgba(255,255,255,.04);padding:10px 8px;text-align:center;}
+.hs-stat-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:#fff;display:block;margin-bottom:2px;}
+.hs-stat-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;color:rgba(255,255,255,.35);text-transform:uppercase;}
+@media(max-width:480px){.hike-slider-grid{grid-template-columns:1fr;}}
+
+/* ── LEAFLET CUSTOM ── */
+.leaflet-popup-content-wrapper{background:var(--ink);color:#fff;border-radius:8px;border:1px solid rgba(255,255,255,.1);}
+.leaflet-popup-tip{background:var(--ink);}
+.leaflet-popup-content{margin:12px 16px;font-family:'DM Sans',sans-serif;}
+.pop-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;}
+.pop-days{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:.1em;}
+.pop-meta{font-size:10px;color:rgba(255,255,255,.55);margin-top:4px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">30 Days in Europe</div>
+  <ul class="nav-links">
+    <li><a href="#map">Map</a></li>
+    <li><a href="#route">Route</a></li>
+    <li><a href="#photos">Places</a></li>
+    <li><a href="#itinerary">Itinerary</a></li>
+    <li><a href="#hikes">Hikes</a></li>
+    <li><a href="#budget">Budget</a></li>
+  </ul>
+  <div class="hamburger" id="ham" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <span class="mob-close" onclick="toggleMenu()">✕</span>
+  <a href="#map" onclick="toggleMenu()">Map</a>
+  <a href="#route" onclick="toggleMenu()">Route</a>
+  <a href="#photos" onclick="toggleMenu()">Places</a>
+  <a href="#destinations" onclick="toggleMenu()">Destinations</a>
+  <a href="#itinerary" onclick="toggleMenu()">Itinerary</a>
+  <a href="#hikes" onclick="toggleMenu()">Hikes</a>
+  <a href="#budget" onclick="toggleMenu()">Budget</a>
+  <a href="#tips" onclick="toggleMenu()">Tips</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <svg class="hero-mountains" viewBox="0 0 1440 160" preserveAspectRatio="none">
+    <path d="M0,160 L0,120 L90,70 L170,105 L290,28 L420,88 L540,14 L660,70 L740,8 L840,58 L950,22 L1060,78 L1180,36 L1300,96 L1380,46 L1440,88 L1440,160 Z" fill="white"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-eyebrow">August · 3 Travelers · 30 Days · Budget-Conscious</div>
+    <div class="hero-title">30 Days<br>in <span>Europe</span></div>
+    <div class="hero-sub">Milan → Dolomites → Austria → Bavaria<br>→ Switzerland → Slovenia → Milan</div>
+    <div class="hero-pills">
+      <span class="pill">🇮🇹 Italy</span>
+      <span class="pill">🇦🇹 Austria</span>
+      <span class="pill">🇩🇪 Germany</span>
+      <span class="pill">🇨🇭 Switzerland</span>
+      <span class="pill">🇸🇮 Slovenia</span>
+    </div>
+  </div>
+  <div class="scroll-cue"><div class="scroll-line"></div>SCROLL</div>
+</section>
+
+<!-- MAP -->
+<section class="map-section" id="map">
+  <div class="map-header inner">
+    <div class="s-label reveal" style="color:var(--gold)">INTERACTIVE MAP</div>
+    <div class="s-title reveal" style="color:#fff;margin-bottom:0">Your route through Europe</div>
+  </div>
+  <div id="tripMap"></div>
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#b5451b"></div>Italy</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3d5a73"></div>Austria</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c9963a"></div>Germany</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#aaa"></div>Switzerland</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4a7c59"></div>Slovenia</div>
+    <div class="legend-item" style="margin-left:auto"><div style="width:24px;height:2px;background:rgba(255,255,255,.3);margin-right:6px;"></div>Route path</div>
+  </div>
+</section>
+
+<!-- ROUTE -->
+<section class="route-section" id="route">
+  <div class="inner-narrow">
+    <div class="s-label reveal" style="color:var(--gold)">THE ROUTE</div>
+    <div class="s-title reveal" style="color:#fff">A clockwise loop through the Alps</div>
+    <div class="route-list reveal">
+      <div class="r-stop"><div class="r-dot d-it">1–2</div><div class="r-info"><div class="r-name">🇮🇹 Milan</div><div class="r-meta">2 nights · Arrival city · Duomo, Navigli, Brera</div></div><div class="r-badge">✈ Arrive</div></div>
+      <div class="r-stop"><div class="r-dot d-it">3–8</div><div class="r-info"><div class="r-name">🇮🇹 The Dolomites</div><div class="r-meta">6 nights · Bolzano + Cortina · Tre Cime, Alpe di Siusi, Lago di Braies, Cinque Torri</div></div><div class="r-badge">🚆 Train + 🚗 Car</div></div>
+      <div class="r-stop"><div class="r-dot d-at">9–10</div><div class="r-info"><div class="r-name">🇦🇹 Innsbruck</div><div class="r-meta">2 nights · Tyrol's alpine capital · Nordkette hike, Golden Roof</div></div><div class="r-badge">🚗 Car</div></div>
+      <div class="r-stop"><div class="r-dot d-at">11–12</div><div class="r-info"><div class="r-name">🇦🇹 Grossglockner / Hohe Tauern</div><div class="r-meta">2 nights · Austria's highest peak · High Alpine Road, Pasterze Glacier</div></div><div class="r-badge">🚗 Car</div></div>
+      <div class="r-stop"><div class="r-dot d-at">13</div><div class="r-info"><div class="r-name">🇦🇹 Salzburg</div><div class="r-meta">1 night · Mozart's city · Hohensalzburg fortress, beer halls</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-de">14–17</div><div class="r-info"><div class="r-name">🇩🇪 Munich + Eibsee + Walchensee</div><div class="r-meta">4 nights · Bavaria · Marienplatz, Zugspitze, Herzogstand hike, lake swimming</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-ch">18–19</div><div class="r-info"><div class="r-name">🇨🇭 Grindelwald, Switzerland</div><div class="r-meta">1 night · Eiger north face · Bachalpsee hike, First Cliff Walk</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-si">20–21</div><div class="r-info"><div class="r-name">🇸🇮 Ljubljana</div><div class="r-meta">2 nights · Slovenia's charming capital · Castle, kayaking, riverside cafes</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-si">22</div><div class="r-info"><div class="r-name">🇸🇮 Postojna Cave</div><div class="r-meta">1 day · Underground wonder · Cave train + Predjama Castle</div></div><div class="r-badge">🚌 Bus</div></div>
+      <div class="r-stop"><div class="r-dot d-si">23–25</div><div class="r-info"><div class="r-name">🇸🇮 Triglav NP — Bled + Bohinj</div><div class="r-meta">3 nights · Slovenia's crown jewel · Lake Bled, Vintgar Gorge, Savica Falls</div></div><div class="r-badge">🚌 Bus</div></div>
+      <div class="r-stop"><div class="r-dot d-it">26</div><div class="r-info"><div class="r-name">🇮🇹 Venice</div><div class="r-meta">1 night · One perfect day · Grand Canal, Rialto, Cicchetti bars</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-it">27–28</div><div class="r-info"><div class="r-name">🇮🇹 Verona</div><div class="r-meta">2 nights · Roman amphitheatre city · Arena, Piazza delle Erbe, Garda</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-it">29–30</div><div class="r-info"><div class="r-name">🇮🇹 Milan</div><div class="r-meta">Return · Last Supper, Sforzesco · Loop complete ✓</div></div><div class="r-badge">🚆 Train</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO GRID -->
+<section class="photos-section" id="photos">
+  <div class="inner">
+    <div class="s-label reveal" style="color:var(--rust)">DESTINATIONS</div>
+    <div class="s-title reveal" style="color:var(--ink)">Everywhere you're going</div>
+    <div class="photo-grid reveal">
+
+      <div class="p-card wide" style="aspect-ratio:16/7">
+        <img src="https://images.unsplash.com/photo-1756858330342-c6f5eb74ce96?auto=format&fit=crop&w=1600&h=900&q=80" alt="Dolomites" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇮🇹 Italy · Days 3–8</div>
+          <div class="p-name">The Dolomites</div>
+          <div class="p-days">6 nights · Bolzano + Cortina d'Ampezzo</div>
+          <div class="p-tags"><span class="ptag">Tre Cime</span><span class="ptag">Lago di Braies</span><span class="ptag">Alpe di Siusi</span></div>
+        </div>
+      </div>
+
+      <div class="p-card" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1631450774451-826da721b277?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Milan Duomo" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇮🇹 Italy · Days 1–2 &amp; 29–30</div>
+          <div class="p-name">Milan</div>
+          <div class="p-days">Start &amp; finish</div>
+          <div class="p-tags"><span class="ptag">Duomo</span><span class="ptag">Last Supper</span><span class="ptag">Navigli</span></div>
+        </div>
+      </div>
+
+      <div class="p-card" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1743521497141-40065816efef?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Innsbruck" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇦🇹 Austria · Days 9–10</div>
+          <div class="p-name">Innsbruck</div>
+          <div class="p-days">2 nights · Tyrol</div>
+          <div class="p-tags"><span class="ptag">Nordkette</span><span class="ptag">Old Town</span></div>
+        </div>
+      </div>
+
+      <div class="p-card wide" style="aspect-ratio:16/7">
+        <img src="https://images.unsplash.com/photo-1638829228708-1471e8386075?auto=format&fit=crop&w=1600&h=900&q=80" alt="Austrian Alps" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇦🇹 Austria · Days 11–12</div>
+          <div class="p-name">Grossglockner</div>
+          <div class="p-days">High Alpine Road + Pasterze Glacier</div>
+          <div class="p-tags"><span class="ptag">3,798m peak</span><span class="ptag">Glacier walk</span><span class="ptag">Alpine road</span></div>
+        </div>
+      </div>
+
+      <div class="p-card" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1741195238202-57ebaee0ac28?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Salzburg" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇦🇹 Austria · Day 13</div>
+          <div class="p-name">Salzburg</div>
+          <div class="p-days">1 night · Mozart's city</div>
+          <div class="p-tags"><span class="ptag">Fortress</span><span class="ptag">Gardens</span></div>
+        </div>
+      </div>
+
+      <div class="p-card" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1741120026139-8ae0036ebe6d?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Munich" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇩🇪 Germany · Days 14–15</div>
+          <div class="p-name">Munich</div>
+          <div class="p-days">2 nights · Bavaria's capital</div>
+          <div class="p-tags"><span class="ptag">Marienplatz</span><span class="ptag">Beer halls</span></div>
+        </div>
+      </div>
+
+      <div class="p-card wide" style="aspect-ratio:16/7">
+        <img src="https://images.unsplash.com/photo-1732130319312-99c2da8522fb?auto=format&fit=crop&w=1600&h=900&q=80" alt="Eibsee Zugspitze" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇩🇪 Germany · Day 16</div>
+          <div class="p-name">Eibsee &amp; Zugspitze</div>
+          <div class="p-days">Germany's highest mountain &amp; most beautiful lake</div>
+          <div class="p-tags"><span class="ptag">Lake circuit</span><span class="ptag">Cable car summit</span></div>
+        </div>
+      </div>
+
+      <div class="p-card" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1691029950483-b636986bab47?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Swiss Alps Grindelwald" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇨🇭 Switzerland · Days 18–19</div>
+          <div class="p-name">Grindelwald</div>
+          <div class="p-days">1 night · Eiger north face</div>
+          <div class="p-tags"><span class="ptag">Bachalpsee</span><span class="ptag">First Cliff Walk</span></div>
+        </div>
+      </div>
+
+      <div class="p-card" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1764357030659-9244f92d81e0?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Lake Bled Slovenia" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇸🇮 Slovenia · Days 23–25</div>
+          <div class="p-name">Lake Bled</div>
+          <div class="p-days">3 nights · Triglav NP</div>
+          <div class="p-tags"><span class="ptag">Island church</span><span class="ptag">Vintgar Gorge</span></div>
+        </div>
+      </div>
+
+      <div class="p-card wide" style="aspect-ratio:16/7">
+        <img src="https://images.unsplash.com/photo-1511135492865-a7afb0ab5937?auto=format&fit=crop&w=1600&h=900&q=80" alt="Venice" loading="lazy" onerror="handleCardImageError(this)">
+        <div class="p-over"></div>
+        <div class="p-content">
+          <div class="p-country">🇮🇹 Italy · Day 26</div>
+          <div class="p-name">Venice</div>
+          <div class="p-days">1 night · One perfect day in the floating city</div>
+          <div class="p-tags"><span class="ptag">Grand Canal</span><span class="ptag">Rialto</span><span class="ptag">Cicchetti</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DESTINATIONS DETAIL -->
+<section class="dest-detail-section" id="destinations">
+  <div class="inner">
+    <div class="s-label reveal" style="color:var(--slate)">DESTINATION GUIDE</div>
+    <div class="s-title reveal" style="color:var(--ink)">What to expect at each stop</div>
+    <div class="dest-cards-list reveal">
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1631450774451-826da721b277?auto=format&fit=crop&w=1200&h=900&q=80" alt="Milan" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇮🇹 Italy · Days 1–2 &amp; 29–30</div>
+          <div class="dc-name">Milan</div>
+          <div class="dc-dates">2 nights arrival · Return on Day 29</div>
+          <div class="dc-desc">Italy's fashion and design capital. A city of grand architecture, vibrant canal-side nightlife, and world-class art. Your trip begins and ends here.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Rooftop Duomo walk</span>
+            <span class="dc-tag sight">🏛️ Last Supper (book early!)</span>
+            <span class="dc-tag sight">🏰 Sforzesco Castle</span>
+            <span class="dc-tag food">🍹 Navigli aperitivo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1756858330342-c6f5eb74ce96?auto=format&fit=crop&w=1200&h=900&q=80" alt="Dolomites" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇮🇹 Italy · Days 3–8</div>
+          <div class="dc-name">The Dolomites</div>
+          <div class="dc-dates">6 nights · Bolzano base + Cortina base · Rental car required</div>
+          <div class="dc-desc">The highlight of the entire trip. Jaw-dropping pink-tinged rock spires, emerald lakes, flower-covered meadows and rifugio culture. Give this the time it deserves.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Tre Cime di Lavaredo circuit</span>
+            <span class="dc-tag hike">🥾 Alpe di Siusi plateau</span>
+            <span class="dc-tag hike">🥾 Cinque Torri trail</span>
+            <span class="dc-tag sight">💙 Lago di Braies</span>
+            <span class="dc-tag food">🍽️ Rifugio lunch stops</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1743521497141-40065816efef?auto=format&fit=crop&w=1200&h=900&q=80" alt="Innsbruck" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇦🇹 Austria · Days 9–10</div>
+          <div class="dc-name">Innsbruck</div>
+          <div class="dc-dates">2 nights · Car → train handoff point</div>
+          <div class="dc-desc">A stunning alpine city nestled in the Inn Valley with peaks rising directly above the old town. The Nordkette cable car launches you from the city centre to 2,200m.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Nordkette ridge walk (2,200m)</span>
+            <span class="dc-tag sight">🏛️ Golden Roof old town</span>
+            <span class="dc-tag sight">🎿 Bergisel ski jump tower</span>
+            <span class="dc-tag food">🥩 Tyrolean gröstl dinner</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1638829228708-1471e8386075?auto=format&fit=crop&w=1200&h=900&q=80" alt="Grossglockner" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇦🇹 Austria · Days 11–12</div>
+          <div class="dc-name">Grossglockner &amp; Hohe Tauern</div>
+          <div class="dc-dates">2 nights · Heiligenblut base</div>
+          <div class="dc-desc">Austria's highest peak at 3,798m and Europe's most spectacular mountain toll road. The Pasterze is Austria's largest glacier — accessible and breathtaking even for beginners.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Pasterze Glacier walk</span>
+            <span class="dc-tag sight">🛣️ High Alpine Road (€38/car)</span>
+            <span class="dc-tag sight">🏔️ Franz-Josefs-Höhe viewpoint</span>
+            <span class="dc-tag hike">🌸 Hohe Tauern wildflower walks</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1741195238202-57ebaee0ac28?auto=format&fit=crop&w=1200&h=900&q=80" alt="Salzburg" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇦🇹 Austria · Day 13</div>
+          <div class="dc-name">Salzburg</div>
+          <div class="dc-dates">1 night · Return car here, switch to train</div>
+          <div class="dc-desc">Mozart's birthplace and one of the world's most beautiful baroque cities. One day is genuinely enough to hit the highlights — then onwards to Bavaria.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag sight">🏰 Hohensalzburg Fortress</span>
+            <span class="dc-tag sight">🌸 Mirabell Palace &amp; Gardens</span>
+            <span class="dc-tag food">🍺 Augustinerbräu beer hall</span>
+            <span class="dc-tag sight">🎵 Getreidegasse &amp; old town</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1732130319312-99c2da8522fb?auto=format&fit=crop&w=1200&h=900&q=80" alt="Munich" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇩🇪 Germany · Days 14–17</div>
+          <div class="dc-name">Munich + Eibsee + Walchensee</div>
+          <div class="dc-dates">4 nights total · City + alpine lakes combo</div>
+          <div class="dc-desc">Bavaria at its best. Munich for culture and beer halls, then two of Germany's most beautiful mountain lakes — Eibsee under the Zugspitze, and quieter Walchensee for swimming and hiking.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag sight">🏛️ Marienplatz &amp; English Garden</span>
+            <span class="dc-tag hike">🥾 Eibsee lake circuit (7 km)</span>
+            <span class="dc-tag hike">🥾 Herzogstand summit (2.5 hrs)</span>
+            <span class="dc-tag sight">🏔️ Zugspitze cable car</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1691029950483-b636986bab47?auto=format&fit=crop&w=1200&h=900&q=80" alt="Grindelwald" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇨🇭 Switzerland · Days 18–19</div>
+          <div class="dc-name">Grindelwald</div>
+          <div class="dc-dates">1 night (budget-conscious) · Stay in Interlaken if cheaper</div>
+          <div class="dc-desc">The Eiger's north face looms over this Swiss alpine village. One night keeps costs manageable while still delivering the Swiss Alps experience — the Bachalpsee hike rivals anything on the trip.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Bachalpsee alpine lake hike</span>
+            <span class="dc-tag sight">🧗 First Cliff Walk</span>
+            <span class="dc-tag sight">⛰️ Eiger, Mönch &amp; Jungfrau views</span>
+            <span class="dc-tag food">🧀 Swiss fondue (splurge night!)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1747386657469-4f3054cf175f?auto=format&fit=crop&w=1200&h=900&q=80" alt="Ljubljana" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇸🇮 Slovenia · Days 20–21</div>
+          <div class="dc-name">Ljubljana</div>
+          <div class="dc-dates">2 nights · One of Europe's most underrated capitals</div>
+          <div class="dc-desc">Small, walkable, affordable and genuinely lovely. Ljubljana has a fairy-tale old town, an easy castle walk, great outdoor cafe culture along the Ljubljanica river, and food that punches far above its price.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Castle forest walk (free)</span>
+            <span class="dc-tag sight">🐉 Dragon Bridge &amp; Triple Bridge</span>
+            <span class="dc-tag food">🚣 Kayaking on Ljubljanica</span>
+            <span class="dc-tag food">🍷 Metelkova arts &amp; culture quarter</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1764357030659-9244f92d81e0?auto=format&fit=crop&w=1200&h=900&q=80" alt="Lake Bled" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇸🇮 Slovenia · Days 23–25</div>
+          <div class="dc-name">Triglav NP — Bled &amp; Bohinj</div>
+          <div class="dc-dates">3 nights · Bled 2 nights + Bohinj 1 night recommended</div>
+          <div class="dc-desc">Arguably the most beautiful stop on the trip. Lake Bled with its island church is iconic — but don't miss Bohinj, which is wilder, emptier and even more stunning. Go early; August crowds are real.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag hike">🥾 Vintgar Gorge boardwalk</span>
+            <span class="dc-tag hike">🥾 Savica Waterfall (1 hr)</span>
+            <span class="dc-tag sight">🏰 Bled Castle viewpoint</span>
+            <span class="dc-tag food">🍰 Kremšnita cream cake</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1511135492865-a7afb0ab5937?auto=format&fit=crop&w=1200&h=900&q=80" alt="Venice" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇮🇹 Italy · Day 26</div>
+          <div class="dc-name">Venice</div>
+          <div class="dc-dates">1 night · Stay in Mestre (mainland) to save money</div>
+          <div class="dc-desc">One day is exactly right for this trip. Venice in August is hot, crowded and expensive on the island — stay in Mestre, commute in, and plan around early mornings and late evenings.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag sight">🚢 Vaporetto Line 1 canal ride</span>
+            <span class="dc-tag food">🐟 Rialto market morning</span>
+            <span class="dc-tag sight">🏛️ Doge's Palace (pre-book)</span>
+            <span class="dc-tag food">🍷 Cicchetti &amp; ombra in a bacaro</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dest-card-big">
+        <div class="dc-photo"><img src="https://images.unsplash.com/photo-1751210166962-4ecba6504049?auto=format&fit=crop&w=1200&h=900&q=80" alt="Verona" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
+        <div class="dc-body">
+          <div class="dc-country">🇮🇹 Italy · Days 27–28</div>
+          <div class="dc-name">Verona</div>
+          <div class="dc-dates">2 nights · Perfect final Italian city stop</div>
+          <div class="dc-desc">A perfectly-sized Roman city that most people pass through too quickly. The Arena is one of the world's best-preserved Roman amphitheatres — check if the August opera season has budget tickets.</div>
+          <div class="dc-highlights">
+            <span class="dc-tag sight">🏛️ Arena di Verona</span>
+            <span class="dc-tag sight">🏟️ Piazza delle Erbe &amp; tower</span>
+            <span class="dc-tag hike">🚌 Day trip to Lake Garda (30 min)</span>
+            <span class="dc-tag food">🎭 Opera in August (from €30)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ITINERARY -->
+<section class="itin-section" id="itinerary">
+  <div class="inner-narrow">
+    <div class="s-label reveal" style="color:var(--sage)">DAY BY DAY</div>
+    <div class="s-title reveal">The full 30-day breakdown</div>
+
+    <div class="phase reveal">
+      <div class="phase-hdr"><span class="phase-num">PHASE 01</span><div class="phase-line"></div></div>
+      <div class="phase-name">🇮🇹 Milan &amp; the Dolomites</div>
+      <div class="phase-desc">Days 1–8 · Arrive in Milan, then straight into the crown jewels of the Alps</div>
+      <div class="days-list">
+        <div class="day-row"><div class="d-num">DAY 1</div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-arr">ARRIVE</span>Settle in Navigli, aperitivo along the canal, explore Brera at sunset</div></div>
+        <div class="day-row"><div class="d-num">DAY 2</div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Duomo &amp; rooftop terrace, Sforzesco Castle, Parco Sempione</div></div>
+        <div class="day-row"><div class="d-num">DAY 3</div><div class="d-loc"><div class="d-loc-name">Bolzano</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Milan → Bolzano (2.5 hrs). Pick up rental car. Old town, Ötzi museum</div></div>
+        <div class="day-row"><div class="d-num">DAY 4</div><div class="d-loc"><div class="d-loc-name">Alpe di Siusi</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>🥾 Full-day hike on Europe's largest high-altitude plateau. Cable car from Ortisei</div></div>
+        <div class="day-row"><div class="d-num">DAY 5</div><div class="d-loc"><div class="d-loc-name">Bolzano area</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Lago di Carezza, Passo Gardena scenic drive, Rifugio lunch</div></div>
+        <div class="day-row"><div class="d-num">DAY 6</div><div class="d-loc"><div class="d-loc-name">Cortina</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Great Dolomites Road. Arrive Cortina. Lago di Braies — arrive by 7:30am tomorrow!</div></div>
+        <div class="day-row"><div class="d-num">DAY 7</div><div class="d-loc"><div class="d-loc-name">Cortina area</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">HIKE</span>🥾 Tre Cime di Lavaredo full circuit (9.5 km, 3.5 hrs)</div></div>
+        <div class="day-row"><div class="d-num">DAY 8</div><div class="d-loc"><div class="d-loc-name">Cortina area</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">HIKE</span>🥾 Cinque Torri trail (WWI trenches + five rock towers, 3 hrs)</div></div>
+      </div>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phase-hdr"><span class="phase-num">PHASE 02</span><div class="phase-line"></div></div>
+      <div class="phase-name">🇦🇹 Austria</div>
+      <div class="phase-desc">Days 9–13 · Tyrol, the highest Alpine road, and Mozart's city</div>
+      <div class="days-list">
+        <div class="day-row"><div class="d-num">DAY 9</div><div class="d-loc"><div class="d-loc-name">Innsbruck</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Cortina → Innsbruck via Brenner (2 hrs). Old town, Golden Roof, Inn riverside</div></div>
+        <div class="day-row"><div class="d-num">DAY 10</div><div class="d-loc"><div class="d-loc-name">Innsbruck</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-car">HIKE</span>🥾 Nordkette cable car to 2,200m + ridge hike. Bergisel jump tower. Tyrolean dinner</div></div>
+        <div class="day-row"><div class="d-num">DAY 11</div><div class="d-loc"><div class="d-loc-name">Grossglockner</div><div class="d-loc-tag">🇦🇹 HOHE TAUERN</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Drive to Heiligenblut. Grossglockner High Alpine Road. Franz-Josefs-Höhe</div></div>
+        <div class="day-row"><div class="d-num">DAY 12</div><div class="d-loc"><div class="d-loc-name">Hohe Tauern NP</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-car">HIKE</span>🥾 Pasterze Glacier walk (2 hrs, easy). Alpine meadow walks. Drive to Salzburg</div></div>
+        <div class="day-row"><div class="d-num">DAY 13</div><div class="d-loc"><div class="d-loc-name">Salzburg</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Drop car. Hohensalzburg fortress, Mirabell Gardens, Augustinerbräu beer hall</div></div>
+      </div>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phase-hdr"><span class="phase-num">PHASE 03</span><div class="phase-line"></div></div>
+      <div class="phase-name">🇩🇪 Bavaria + 🇨🇭 Switzerland</div>
+      <div class="phase-desc">Days 14–19 · Alpine lakes, Germany's highest peak, one splurge night in the Swiss Alps</div>
+      <div class="days-list">
+        <div class="day-row"><div class="d-num">DAY 14</div><div class="d-loc"><div class="d-loc-name">Munich</div><div class="d-loc-tag">🇩🇪 GERMANY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Salzburg → Munich (1.5 hrs). English Garden, Marienplatz, Hofbräuhaus</div></div>
+        <div class="day-row"><div class="d-num">DAY 15</div><div class="d-loc"><div class="d-loc-name">Munich</div><div class="d-loc-tag">🇩🇪 GERMANY</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Deutsches Museum, Nymphenburg Palace gardens, beer garden evening</div></div>
+        <div class="day-row"><div class="d-num">DAY 16</div><div class="d-loc"><div class="d-loc-name">Eibsee / Zugspitze</div><div class="d-loc-tag">🇩🇪 BAVARIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Day trip to Garmisch. 🥾 Eibsee circuit (7 km). Zugspitze cable car to summit</div></div>
+        <div class="day-row"><div class="d-num">DAY 17</div><div class="d-loc"><div class="d-loc-name">Walchensee</div><div class="d-loc-tag">🇩🇪 BAVARIA</div></div><div class="d-act"><span class="badge b-bus">BUS</span>🥾 Herzogstand hike (2.5 hrs panoramic). Swim in the lake. Quiet village night</div></div>
+        <div class="day-row"><div class="d-num">DAY 18</div><div class="d-loc"><div class="d-loc-name">Grindelwald</div><div class="d-loc-tag">🇨🇭 SWITZERLAND</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Walchensee → Grindelwald via Munich (~5 hrs). Arrive, Eiger views</div></div>
+        <div class="day-row"><div class="d-num">DAY 19</div><div class="d-loc"><div class="d-loc-name">Grindelwald</div><div class="d-loc-tag">🇨🇭 SWITZERLAND</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 First gondola + Bachalpsee lake hike (2.5 hrs). First Cliff Walk. Depart to Ljubljana</div></div>
+      </div>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phase-hdr"><span class="phase-num">PHASE 04</span><div class="phase-line"></div></div>
+      <div class="phase-name">🇸🇮 Slovenia</div>
+      <div class="phase-desc">Days 20–25 · The most underrated country on the trip — lush, cheap, and stunning</div>
+      <div class="days-list">
+        <div class="day-row"><div class="d-num">DAY 20</div><div class="d-loc"><div class="d-loc-name">Ljubljana</div><div class="d-loc-tag">🇸🇮 SLOVENIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Grindelwald → Ljubljana (~5–6 hrs). Castle, Dragon Bridge, riverside cafes</div></div>
+        <div class="day-row"><div class="d-num">DAY 21</div><div class="d-loc"><div class="d-loc-name">Ljubljana</div><div class="d-loc-tag">🇸🇮 SLOVENIA</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Kayaking on the Ljubljanica, Metelkova arts quarter, amazing cheap food</div></div>
+        <div class="day-row"><div class="d-num">DAY 22</div><div class="d-loc"><div class="d-loc-name">Postojna Cave</div><div class="d-loc-tag">🇸🇮 SLOVENIA</div></div><div class="d-act"><span class="badge b-bus">BUS</span>Postojna Cave tour (electric train inside, 10°C!). Predjama Castle</div></div>
+        <div class="day-row"><div class="d-num">DAY 23</div><div class="d-loc"><div class="d-loc-name">Lake Bled</div><div class="d-loc-tag">🇸🇮 TRIGLAV NP</div></div><div class="d-act"><span class="badge b-bus">BUS</span>Arrive Bled. 🥾 Ojstrica viewpoint (30 min, iconic island church view)</div></div>
+        <div class="day-row"><div class="d-num">DAY 24</div><div class="d-loc"><div class="d-loc-name">Bled / Vintgar</div><div class="d-loc-tag">🇸🇮 TRIGLAV NP</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 Vintgar Gorge boardwalk (1.6 km, stunning). Bled Castle. Kremšnita cake!</div></div>
+        <div class="day-row"><div class="d-num">DAY 25</div><div class="d-loc"><div class="d-loc-name">Lake Bohinj</div><div class="d-loc-tag">🇸🇮 TRIGLAV NP</div></div><div class="d-act"><span class="badge b-bus">BUS</span>🥾 Savica Waterfall (1 hr). Swim in Bohinj — wilder and quieter than Bled. Paradise.</div></div>
+      </div>
+    </div>
+
+    <div class="phase reveal">
+      <div class="phase-hdr"><span class="phase-num">PHASE 05</span><div class="phase-line"></div></div>
+      <div class="phase-name">🇮🇹 Back to Italy</div>
+      <div class="phase-desc">Days 26–30 · Venice for a day, a Roman city as finale, home to Milan</div>
+      <div class="days-list">
+        <div class="day-row"><div class="d-num">DAY 26</div><div class="d-loc"><div class="d-loc-name">Venice</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Bled → Venice (2.5 hrs). Vaporetto Line 1, Rialto market, Cannaregio, cicchetti</div></div>
+        <div class="day-row"><div class="d-num">DAY 27</div><div class="d-loc"><div class="d-loc-name">Verona</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Venice → Verona (1.5 hrs). Arena di Verona, Piazza delle Erbe, Juliet's House</div></div>
+        <div class="day-row"><div class="d-num">DAY 28</div><div class="d-loc"><div class="d-loc-name">Verona / Garda</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-bus">BUS</span>Optional Lake Garda day trip (30 min). Castelvecchio. Evening opera at the Arena</div></div>
+        <div class="day-row"><div class="d-num">DAY 29</div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Verona → Milan (1 hr). Last Supper (pre-booked!), Sforzesco Castle, final gelato</div></div>
+        <div class="day-row"><div class="d-num">DAY 30</div><div class="d-loc"><div class="d-loc-name">Home</div><div class="d-loc-tag">🇮🇹 DEPART</div></div><div class="d-act"><span class="badge b-arr">DEPART</span>Morning buffer. Airport transfer. 30 days, 5 countries, 1 perfect loop. ✓</div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HIKES -->
+<section class="hikes-section" id="hikes">
+  <div class="hikes-bg"></div>
+  <div class="inner" style="position:relative;z-index:1">
+    <div class="s-label reveal" style="color:var(--sage)">HIKING HIGHLIGHTS</div>
+    <div class="s-title reveal" style="color:#fff">Every trail on the trip</div>
+    <p class="reveal" style="color:rgba(255,255,255,.5);font-size:13px;margin-top:-30px;margin-bottom:48px;">Swipe the photos on each card to see the trail. Tap any card for full details.</p>
+
+    <div class="hike-slider-grid reveal">
+
+      <!-- ── HIKE 1: Alpe di Siusi ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s0">
+          <div class="hs-track" id="t0">
+            <div class="hs-slide"><img src="https://youshouldgohere.com/wp-content/uploads/2024/08/AlpediSiusi.jpg" alt="Alpe di Siusi photo 1"></div>
+            <div class="hs-slide"><img src="https://wanderyourway.com/wp-content/uploads/2019/12/Castelrotto-1222newA.jpg"></div>
+            <div class="hs-slide"><img src="https://youshouldgohere.com/wp-content/uploads/2024/08/IMG_4317.jpg" alt="Alpe di Siusi photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Alpe di Siusi Plateau</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-full">Full Day</span></div></div>
+          <div class="hs-loc">Dolomites, Italy · Day 4</div>
+          <div class="hs-desc">Cable car from Ortisei to Europe's largest high-altitude plateau. Gentle meadow paths with jaw-dropping Dolomite peaks in every direction.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">8–12 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~300 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">3–5 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 2: Tre Cime ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s1">
+          <div class="hs-track" id="t1">
+            <div class="hs-slide"><img src="https://www.guidedolomiti.com/wp-content/uploads/walk-around-the-tre-cime.webp" alt="Tre Cime photo 1"></div>
+            <div class="hs-slide"><img src="https://theportuguesetraveler.com/wp-content/uploads/2024/09/tre-cime-di-lavaredo-drei-zinnen-hike-127.jpg.webp" alt="Tre Cime photo 2"></div>
+            <div class="hs-slide"><img src="https://media.tourispo.com/images/ecu/entity/e_hike/hike_summer-walk-around-the-tre-cime-di-lavaredo-drei-zinnen-three-peaks-_n68884-65213-0_l.jpg" alt="Tre Cime photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Tre Cime di Lavaredo</div><div class="hs-badges"><span class="hb hb-mod">Moderate</span><span class="hb hb-full">Full Day</span></div></div>
+          <div class="hs-loc">Dolomites, Italy · Day 7</div>
+          <div class="hs-desc">The crown jewel of the Dolomites. 9.5 km circuit around three iconic spires. Rocky alpine terrain, rifugio lunch, absolutely unforgettable.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">9.5 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~550 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">3–4 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 3: Cinque Torri ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s2">
+          <div class="hs-track" id="t2">
+            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/08/How-to-Hike-Cinque-Torri-Photo.jpg.optimal.jpg" alt="Cinque Torri photo 1"></div>
+            <div class="hs-slide"><img src="https://www.ourbigjourney.com/wp-content/uploads/2025/10/DSC00603.jpg.webp" alt="Cinque Torri photo 2"></div>
+            <div class="hs-slide"><img src="https://thetravellinghiker.com/wp-content/uploads/2026/01/09082025-IMG_3979.jpg" alt="Cinque Torri photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Cinque Torri Trail</div><div class="hs-badges"><span class="hb hb-easy">Easy–Mod</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Cortina, Italy · Day 8</div>
+          <div class="hs-desc">Five rock towers with WWI mountain trenches still intact. 3-hour loop with broad Dolomite views. Chairlift option available to cut the climb.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">6 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~350 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">2.5–3 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 4: Nordkette ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s3">
+          <div class="hs-track" id="t3">
+            <div class="hs-slide"><img src="https://vonortzuort.reisen/wp-content/uploads/sites/2/2025/03/innsbruck-nordkette-wandern-seegrube-1024x682.jpeg" alt="Nordkette photo 1"></div>
+            <div class="hs-slide"><img src="https://www.mountainmoments.com/wp-content/uploads/2021/07/mountainmoments-mariusschwager_WP_20151206_15_13_54_Raw_LI__highres-2-1030x617.jpg" alt="Nordkette photo 2"></div>
+            <div class="hs-slide"><img src="https://www.mountainmoments.com/wp-content/uploads/2021/07/Mountain-Moments-Innsbruck-Nordkette-Via-Ferrata-Ridge-Photography-1-1030x686.jpeg" alt="Nordkette photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Nordkette Ridge Walk</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Innsbruck, Austria · Day 10</div>
+          <div class="hs-desc">Cable car from the city centre launches you to 2,334m. Short ridge hike above the clouds looking down on the Inn Valley and Innsbruck below.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">4–6 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~250 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">1.5–2.5 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 5: Pasterze ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s4">
+          <div class="hs-track" id="t4">
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/p/db/Pasterze_2.jpg/800px-Pasterze_2.jpg" alt="Pasterze photo 1"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/g/03/Grossglockner_from_Pasterze.jpg/800px-Grossglockner_from_Pasterze.jpg" alt="Pasterze photo 2"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/p/0b/Pasterze_glacier.jpg/800px-Pasterze_glacier.jpg" alt="Pasterze photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Pasterze Glacier Walk</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Grossglockner, Austria · Day 12</div>
+          <div class="hs-desc">Walk to the toe of Austria's largest glacier from Franz-Josefs-Höhe. Flat and accessible. The blue-white glacier landscape is extraordinary.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">4 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~120 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">1.5–2 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 6: Eibsee ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s5">
+          <div class="hs-track" id="t5">
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/cf/Eibsee_mit_Zugspitze.jpg/800px-Eibsee_mit_Zugspitze.jpg" alt="Eibsee photo 1"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Eibsee_Ufer.jpg/800px-Eibsee_Ufer.jpg" alt="Eibsee photo 2"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/86/Eibsee_zugspitze_2007.jpg/800px-Eibsee_zugspitze_2007.jpg" alt="Eibsee photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Eibsee Circuit</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Bavaria, Germany · Day 16</div>
+          <div class="hs-desc">A 7 km loop around one of Germany's most beautiful glacial lakes, turquoise beneath the Zugspitze. Flat, easy, and stunning at every step.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">7 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~80 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">2–2.5 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 7: Herzogstand ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s6">
+          <div class="hs-track" id="t6">
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/h/7e/Herzogstand.jpg/800px-Herzogstand.jpg" alt="Herzogstand photo 1"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/w/f0/Walchensee_Herzogstand.jpg/800px-Walchensee_Herzogstand.jpg" alt="Herzogstand photo 2"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/w/b2/Walchensee.jpg/800px-Walchensee.jpg" alt="Herzogstand photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Herzogstand Summit</div><div class="hs-badges"><span class="hb hb-mod">Moderate</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Walchensee, Germany · Day 17</div>
+          <div class="hs-desc">Climb above Walchensee to sweeping panoramic Alps views from 1,731m. Cable car option available. Swim in the lake when you return.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">8 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~760 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">2.5–3.5 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 8: Bachalpsee ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s7">
+          <div class="hs-track" id="t7">
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/9a/Bachalpsee_-_Grindelwald.jpg/800px-Bachalpsee_-_Grindelwald.jpg" alt="Bachalpsee photo 1"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ef/Bachalpsee01.jpg/800px-Bachalpsee01.jpg" alt="Bachalpsee photo 2"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/9f/Bachsee_Grindelwald.jpg/800px-Bachsee_Grindelwald.jpg" alt="Bachalpsee photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Bachalpsee Alpine Lake</div><div class="hs-badges"><span class="hb hb-easy">Easy–Mod</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Grindelwald, Switzerland · Day 19</div>
+          <div class="hs-desc">Take the First gondola then walk 2.5 hrs to a stunning alpine lake that perfectly mirrors the Eiger, Mönch and Jungfrau. Unmissable.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">7 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~350 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">2–3 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 9: Vintgar ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s8">
+          <div class="hs-track" id="t8">
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/v/5f/Vintgar_gorge_Slovenia.jpg/800px-Vintgar_gorge_Slovenia.jpg" alt="Vintgar photo 1"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/v/41/Vintgar_Slovenia.jpg/800px-Vintgar_Slovenia.jpg" alt="Vintgar photo 2"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/s/7a/Soteska_Vintgar_2.jpg/800px-Soteska_Vintgar_2.jpg" alt="Vintgar photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Vintgar Gorge Walk</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Bled, Slovenia · Day 24</div>
+          <div class="hs-desc">A 1.6 km wooden boardwalk carved into the walls of a dramatic emerald river gorge. Easy, spectacular, one of Slovenia's most beloved walks.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">3.2 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~70 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">1–1.5 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 10: Savica ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s9">
+          <div class="hs-track" id="t9">
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/s/4a/Slap_Savica,_Bohinj,_Slovenia.jpg/800px-Slap_Savica,_Bohinj,_Slovenia.jpg" alt="Savica photo 1"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/l/75/Lake_Bohinj,_Slovenia.jpg/800px-Lake_Bohinj,_Slovenia.jpg" alt="Savica photo 2"></div>
+            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/71/Bohinj_Lake.jpg/800px-Bohinj_Lake.jpg" alt="Savica photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Savica Waterfall</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Bohinj, Slovenia · Day 25</div>
+          <div class="hs-desc">A beautiful 1-hour walk through forest to an impressive 78m waterfall. Combine with a wild swim in Lake Bohinj afterward — paradise in August.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">3.5 km</span><span class="hs-stat-label">Distance</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~200 m</span><span class="hs-stat-label">Elevation</span></div>
+            <div class="hs-stat"><span class="hs-stat-val">1–1.5 hrs</span><span class="hs-stat-label">Duration</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BUDGET -->
+<section class="budget-section" id="budget">
+  <div class="inner-narrow">
+    <div class="s-label reveal" style="color:var(--gold)">MONEY</div>
+    <div class="s-title reveal">Rough budget per person</div>
+    <div class="budget-grid reveal">
+      <div class="bcard"><div class="bcard-icon">🛏️</div><div class="bcard-label">Accommodation</div><div class="bcard-amount">€850</div><div class="bcard-note">Hostels ~€25–35/night avg. Switzerland higher.</div></div>
+      <div class="bcard"><div class="bcard-icon">🚆</div><div class="bcard-label">Transport</div><div class="bcard-amount">€500</div><div class="bcard-note">Trains + shared car rental + fuel + tolls</div></div>
+      <div class="bcard"><div class="bcard-icon">🍕</div><div class="bcard-label">Food</div><div class="bcard-amount">€750</div><div class="bcard-note">Markets, cheap eats, self-catering</div></div>
+      <div class="bcard"><div class="bcard-icon">🎟️</div><div class="bcard-label">Activities</div><div class="bcard-amount">€280</div><div class="bcard-note">Cable cars, Postojna, Last Supper, Alpine road</div></div>
+    </div>
+    <div class="budget-total reveal">
+      <div><div class="bt-label">Estimated Total Per Person</div><div class="bt-sub">excluding flights · August prices</div></div>
+      <div><div class="bt-amount">~€2,380</div><div class="bt-range">range: €1,800 – €2,900</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="tips-section" id="tips">
+  <div class="inner-narrow">
+    <div class="s-label reveal" style="color:var(--rust)">BEFORE YOU GO</div>
+    <div class="s-title reveal">August tips &amp; warnings</div>
+    <div class="tips-cols reveal">
+      <div>
+        <div class="tip-group">
+          <div class="tip-gtitle">🗓️ Book These Immediately</div>
+          <div class="tip-item"><span>⚠️</span>Last Supper (Milan) — book 2–3 months ahead minimum</div>
+          <div class="tip-item"><span>🦠</span>Postojna Cave — buy online (cheaper + skip the queue)</div>
+          <div class="tip-item"><span>🎭</span>Verona Opera at the Arena — from ~€30 if available</div>
+          <div class="tip-item"><span>🏨</span>Salzburg Festival all August — book 6+ weeks ahead</div>
+          <div class="tip-item"><span>🇨🇭</span>Swiss hostels fill fast — book 4–6 weeks ahead</div>
+        </div>
+        <div class="tip-group">
+          <div class="tip-gtitle">🚗 Car Rental Tips</div>
+          <div class="tip-item"><span>📍</span>Rent Car #1 in Bolzano (not Milan) — much cheaper</div>
+          <div class="tip-item"><span>🗺️</span>Get Austrian motorway vignette included or buy at border</div>
+          <div class="tip-item"><span>💳</span>Grossglockner road toll ~€38/car — pay early morning</div>
+          <div class="tip-item"><span>🅿️</span>Lago di Braies: arrive before 7:30am in August!</div>
+        </div>
+      </div>
+      <div>
+        <div class="tip-group">
+          <div class="tip-gtitle">📱 Essential Apps</div>
+          <div class="tip-item"><span>🗺️</span>Komoot or AllTrails — download offline trail maps</div>
+          <div class="tip-item"><span>🚂</span>DB Navigator (German trains) + Trainline (all Europe)</div>
+          <div class="tip-item"><span>🏨</span>Hostelworld / Booking.com — filter by dorm beds</div>
+          <div class="tip-item"><span>📡</span>Google Maps Offline — download each country before entering</div>
+        </div>
+        <div class="tip-group">
+          <div class="tip-gtitle">🎒 What to Pack</div>
+          <div class="tip-item"><span>🧥</span>Lightweight rain jacket — Alps get afternoon thunderstorms</div>
+          <div class="tip-item"><span>👟</span>Hiking shoes with ankle support (not just trail runners)</div>
+          <div class="tip-item"><span>🩳</span>Swimwear — Walchensee, Eibsee, Bohinj are perfect in Aug</div>
+          <div class="tip-item"><span>🧣</span>Light down layer — evenings at altitude are cold in August</div>
+          <div class="tip-item"><span>💧</span>Reusable bottle — mountain spring water is free everywhere</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">Buon viaggio.</div>
+  <div class="ft-note">30 days · 5 countries · 10 hikes · 1 clockwise loop · August</div>
+  <div class="ft-note">Milan → Dolomites → Austria → Bavaria → Switzerland → Slovenia → Milan</div>
+</footer>
+
+<script>
+// NAV
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
+
+// Mobile menu
+function toggleMenu() {
+  document.getElementById('mobMenu').classList.toggle('open');
+}
+
+// Reveal on scroll
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+}), { threshold: 0.07, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── LEAFLET MAP ──
+const stops = [
+  { name: 'Milan', lat: 45.464, lng: 9.188, days: 'Days 1–2 & 29–30', meta: '4 nights total · Start & end of the loop', color: '#b5451b' },
+  { name: 'Dolomites (Bolzano)', lat: 46.498, lng: 11.354, days: 'Days 3–5', meta: '3 nights · Alpe di Siusi, Lago di Carezza', color: '#b5451b' },
+  { name: 'Dolomites (Cortina)', lat: 46.536, lng: 12.135, days: 'Days 6–8', meta: '3 nights · Tre Cime, Lago di Braies, Cinque Torri', color: '#b5451b' },
+  { name: 'Innsbruck', lat: 47.269, lng: 11.404, days: 'Days 9–10', meta: '2 nights · Nordkette hike, Golden Roof', color: '#3d5a73' },
+  { name: 'Grossglockner / Heiligenblut', lat: 47.041, lng: 12.843, days: 'Days 11–12', meta: '2 nights · High Alpine Road, Pasterze Glacier', color: '#3d5a73' },
+  { name: 'Salzburg', lat: 47.798, lng: 13.047, days: 'Day 13', meta: '1 night · Fortress, Mozart, beer halls', color: '#3d5a73' },
+  { name: 'Munich', lat: 48.137, lng: 11.576, days: 'Days 14–15', meta: '2 nights · Marienplatz, English Garden', color: '#c9963a' },
+  { name: 'Eibsee / Zugspitze', lat: 47.456, lng: 10.988, days: 'Day 16', meta: 'Day trip from Munich · Lake circuit + summit', color: '#c9963a' },
+  { name: 'Walchensee', lat: 47.599, lng: 11.339, days: 'Day 17', meta: '1 night · Herzogstand hike, lake swimming', color: '#c9963a' },
+  { name: 'Grindelwald', lat: 46.624, lng: 8.041, days: 'Days 18–19', meta: '1 night · Bachalpsee hike, Eiger views', color: '#999' },
+  { name: 'Ljubljana', lat: 46.056, lng: 14.505, days: 'Days 20–21', meta: '2 nights · Castle, kayaking, riverside cafes', color: '#4a7c59' },
+  { name: 'Postojna Cave', lat: 45.783, lng: 14.203, days: 'Day 22', meta: '1 day · Cave tour + Predjama Castle', color: '#4a7c59' },
+  { name: 'Lake Bled', lat: 46.368, lng: 14.114, days: 'Days 23–24', meta: '2 nights · Island church, Vintgar Gorge', color: '#4a7c59' },
+  { name: 'Lake Bohinj', lat: 46.284, lng: 13.879, days: 'Day 25', meta: '1 night · Savica Falls, wild swimming', color: '#4a7c59' },
+  { name: 'Venice', lat: 45.434, lng: 12.338, days: 'Day 26', meta: '1 night · Grand Canal, Rialto, Cicchetti', color: '#b5451b' },
+  { name: 'Verona', lat: 45.439, lng: 10.993, days: 'Days 27–28', meta: '2 nights · Arena, Roman city, Lake Garda', color: '#b5451b' },
+];
+
+const map = L.map('tripMap', { zoomControl: true, scrollWheelZoom: false }).setView([47.2, 11.5], 5);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap &copy; CartoDB', subdomains: 'abcd', maxZoom: 19
+}).addTo(map);
+
+// Draw route line
+const routeCoords = stops.map(s => [s.lat, s.lng]);
+// Close the loop back to Milan
+routeCoords.push([45.464, 9.188]);
+L.polyline(routeCoords, { color: 'rgba(201,150,58,0.55)', weight: 2.5, dashArray: '6 5' }).addTo(map);
+
+// Add markers
+stops.forEach((stop, i) => {
+  const isStart = i === 0;
+  const icon = L.divIcon({
+    className: '',
+    html: `<div style="
+      width:${isStart ? 36 : 28}px;height:${isStart ? 36 : 28}px;
+      background:${stop.color};border-radius:50%;
+      border:2px solid rgba(255,255,255,0.8);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'DM Mono',monospace;font-size:${isStart ? 10 : 8}px;
+      color:#fff;font-weight:500;
+      box-shadow:0 2px 8px rgba(0,0,0,0.4);
+      cursor:pointer;
+    ">${i === 0 || i === stops.length - 1 ? '✦' : i + 1}</div>`,
+    iconSize: [isStart ? 36 : 28, isStart ? 36 : 28],
+    iconAnchor: [isStart ? 18 : 14, isStart ? 18 : 14],
+  });
+
+  const marker = L.marker([stop.lat, stop.lng], { icon }).addTo(map);
+  marker.bindPopup(`
+    <div class="pop-name">${stop.name}</div>
+    <div class="pop-days">${stop.days}</div>
+    <div class="pop-meta">${stop.meta}</div>
+  `, { maxWidth: 220 });
+});
+
+// Fit map to route
+map.fitBounds(L.latLngBounds(routeCoords), { padding: [30, 30] });
+
+// ── HIKE SLIDERS (reads static HTML img tags) ──
+document.querySelectorAll('.hs-card').forEach((card) => {
+  const track  = card.querySelector('.hs-track');
+  const slides = card.querySelectorAll('.hs-slide');
+  const dots   = card.querySelectorAll('.hs-dot');
+  const total  = slides.length;
+  let cur = 0;
+
+  track.style.width = (total * 100) + '%';
+  slides.forEach(s => s.style.width = (100 / total) + '%');
+
+  function goTo(n) {
+    cur = ((n % total) + total) % total;
+    track.style.transform = `translateX(-${cur * (100 / total)}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+
+  card.querySelector('.hs-prev').addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
+  card.querySelector('.hs-next').addEventListener('click', e => { e.stopPropagation(); goTo(cur + 1); });
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+  let startX = 0, dragging = false;
+  const slider = card.querySelector('.hs-slider');
+  slider.addEventListener('mousedown',  e => { startX = e.clientX; dragging = true; });
+  slider.addEventListener('mousemove',  e => { if (dragging) e.preventDefault(); });
+  slider.addEventListener('mouseup',    e => { if (!dragging) return; dragging = false; if (Math.abs(e.clientX - startX) > 40) goTo(e.clientX < startX ? cur + 1 : cur - 1); });
+  slider.addEventListener('mouseleave', () => { dragging = false; });
+  slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  slider.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - startX; if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1); });
+});
+</script>
+</body>
+</html>
