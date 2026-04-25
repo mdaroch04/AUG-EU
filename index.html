@@ -304,6 +304,27 @@ footer{background:var(--ink);padding:52px 24px;text-align:center;}
 .hs-opt-toggle.opt-open .hs-opt-arrow{transform:rotate(180deg);}
 .hs-opt-body{display:none;padding:4px 0 10px;}
 .hs-opt-body.opt-open{display:block;}
+/* Mobile: cap dropdown height and make it scrollable */
+@media(max-width:600px){
+  .hs-opt-body.opt-open{
+    max-height:260px;
+    overflow-y:auto;
+    /* subtle scrollbar styling */
+    scrollbar-width:thin;
+    scrollbar-color:rgba(255,255,255,.2) transparent;
+  }
+  .hs-opt-body.opt-open::-webkit-scrollbar{width:4px;}
+  .hs-opt-body.opt-open::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px;}
+  /* Also cap logistics body the same way */
+  .hs-log-body.log-open{
+    max-height:280px;
+    overflow-y:auto;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(255,255,255,.2) transparent;
+  }
+  .hs-log-body.log-open::-webkit-scrollbar{width:4px;}
+  .hs-log-body.log-open::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px;}
+}
 .hs-opt-row{display:flex;gap:7px;align-items:flex-start;font-size:10px;color:rgba(255,255,255,.5);line-height:1.5;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);}
 .hs-opt-row:last-child{border-bottom:none;}
 .hs-opt-icon{flex-shrink:0;font-size:11px;width:16px;text-align:center;margin-top:1px;}
@@ -404,7 +425,7 @@ footer{background:var(--ink);padding:52px 24px;text-align:center;}
 .bi-item strong{color:var(--ink);font-weight:500;}
 /* cost notes inside hike cards */
 .hs-cost-note{grid-column:1/-1;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;color:rgba(201,150,58,.9);background:rgba(201,150,58,.08);padding:6px 10px;border-radius:4px;margin-top:2px;border:1px solid rgba(201,150,58,.2);display:flex;align-items:center;gap:6px;}
-@media(max-width:660px){.budget-phase-banner{grid-template-columns:1fr;}.bpb-divider{text-align:left;padding:6px 0;border:none;border-top:1px solid rgba(201,150,58,.2);border-bottom:1px solid rgba(201,150,58,.2);}.budget-split{grid-template-columns:1fr;}.budget-insights{grid-template-columns:1fr;}.budget-phase-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:660px){.budget-phase-banner{grid-template-columns:1fr;}.bpb-divider{text-align:left;padding:6px 0;border:none;border-top:1px solid rgba(201,150,58,.2);border-bottom:1px solid rgba(201,150,58,.2);}.budget-split{grid-template-columns:1fr;}.budget-insights{grid-template-columns:1fr;}.budget-phase-row{min-width:480px;}}
 
 /* ── MOBILE-FIRST IMPROVEMENTS ── */
 /* Reduce section padding on mobile */
@@ -498,6 +519,30 @@ img{max-width:100%;}
 @media(max-width:660px){
   .bpb-route{font-size:9px;}
   .bpb-label{font-size:14px;}
+}
+
+/* ── BUDGET TABLE SCROLL WRAPPER (mobile) ── */
+.budget-table-scroll{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border-radius:10px;
+  /* Hint that it scrolls on mobile */
+}
+@media(max-width:660px){
+  .budget-table-scroll::after{
+    content:'← scroll →';
+    display:block;
+    text-align:center;
+    font-family:'DM Mono',monospace;
+    font-size:8px;
+    letter-spacing:.12em;
+    color:rgba(0,0,0,.3);
+    padding:4px 0 0;
+  }
+  .budget-phase-row{
+    /* override the broken 1fr 1fr — keep full 4-col layout */
+    grid-template-columns:1.2fr 1fr 1fr 1fr;
+  }
 }
 
 </style>
@@ -1043,9 +1088,9 @@ img{max-width:100%;}
         <div class="hs-upgrade-ribbon">🔥 RECOMMENDED UPGRADE</div>
         <div class="hs-slider" id="s0u">
           <div class="hs-track" id="t0u">
-            <div class="hs-slide"><img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/af/d3/23/caption.jpg?w=1200&h=900&s=1" alt="Seceda Odle spires"></div>
-            <div class="hs-slide"><img src="https://www.trailsoftheworld.com/sites/default/files/styles/big_image/public/2023-09/seceda-in-val-gardena.jpg" alt="Seceda ridge view"></div>
-            <div class="hs-slide"><img src="https://www.altoadige-suedtirol.it/wp-content/uploads/2020/09/Seceda-Geiselerspitzen-Ortisei-Alto-Adige.jpg" alt="Seceda Geisler spires"></div>
+            <div class="hs-slide"><img src="https://www.suedtirol.info/content/dam/idm/im/images/experiences/activities/s/s_2/smgpoid219139423c32313f1510b254d89e3a7/BAB4F1FD901B57B8149BF9706BD3649E.jpeg" alt="Seceda Odle spires"></div>
+            <div class="hs-slide"><img src="https://northabroad.com/wp-content/uploads/seceda-PITA4660-Enhanced-cover.jpg" alt="Seceda ridge view"></div>
+            <div class="hs-slide"><img src="https://footprintsleftabroad.com/wp-content/uploads/2025/07/Seceda-ridge-line-2-1024x473.jpg"></div>
           </div>
           <button class="hs-arrow hs-prev">&#8592;</button>
           <button class="hs-arrow hs-next">&#8594;</button>
@@ -1126,9 +1171,9 @@ img{max-width:100%;}
       <div class="hs-card">
         <div class="hs-slider" id="sB">
           <div class="hs-track" id="tB">
-            <div class="hs-slide"><img src="https://images.unsplash.com/photo-1589553416260-f586c8f1514f?auto=format&fit=crop&w=900&h=675&q=80" alt="Lago di Braies"></div>
-            <div class="hs-slide"><img src="https://www.theblondeabroad.com/wp-content/uploads/2019/04/Lago-di-Braies-Italy-10.jpg" alt="Lago di Braies boathouse"></div>
-            <div class="hs-slide"><img src="https://www.worldwildschooling.com/wp-content/uploads/2023/07/lago-di-braies-panoramic-view.jpg" alt="Lago di Braies overhead view"></div>
+            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/09/Lago-di-Braies-Dolomites.jpg.optimal.jpg" alt="Lago di Braies"></div>
+            <div class="hs-slide"><img src="https://www.swedishnomad.com/wp-content/images/2018/07/lago-di-braies-3.jpg" alt="Lago di Braies boathouse"></div>
+            <div class="hs-slide"><img src="https://www.overseashiker.com/wp-content/uploads/2024/03/lago-di-braies-day-hike-3-lago-di-braies.jpg" alt="Lago di Braies overhead view"></div>
           </div>
           <button class="hs-arrow hs-prev">&#8592;</button>
           <button class="hs-arrow hs-next">&#8594;</button>
@@ -1209,9 +1254,9 @@ img{max-width:100%;}
         <div class="hs-upgrade-ribbon">🔥 RECOMMENDED UPGRADE</div>
         <div class="hs-slider" id="s2u">
           <div class="hs-track" id="t2u">
-            <div class="hs-slide"><img src="https://www.dolomites.org/sites/default/files/styles/cover_image_1920/public/2024-04/lagazuoi_-_ph._martin_lugger.jpg" alt="Lagazuoi summit panorama"></div>
-            <div class="hs-slide"><img src="https://www.dolomitenski.com/wp-content/uploads/2023/09/lagazuoi-panorama.jpg" alt="Lagazuoi view of Dolomites"></div>
-            <div class="hs-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Lagazuoi_tunnel_interno.jpg/1200px-Lagazuoi_tunnel_interno.jpg" alt="Lagazuoi WWI tunnel"></div>
+            <div class="hs-slide"><img src="https://www.awaitingoutdoors.com/wp-content/uploads/2020/04/Italy-Alps-Dolomites-Refugio-Lagazuoi-9.jpg" alt="Lagazuoi summit panorama"></div>
+            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/08/Lagazuoi-Hike-Photo.jpg.optimal.jpg" alt="Lagazuoi view of Dolomites"></div>
+            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/08/Lagazuoi-Dolomites-Italy.jpg.optimal.jpg" alt="Lagazuoi WWI tunnel"></div>
           </div>
           <button class="hs-arrow hs-prev">&#8592;</button>
           <button class="hs-arrow hs-next">&#8594;</button>
@@ -1570,7 +1615,7 @@ img{max-width:100%;}
     <!-- Phase-by-phase table -->
     <div class="reveal" style="margin-bottom:16px;">
       <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--warm);margin-bottom:12px;">Per-person cost by phase</div>
-      <div class="budget-phase-row">
+      <div class="budget-table-scroll"><div class="budget-phase-row">
         <div class="bpr-head">Category</div>
         <div class="bpr-head" style="color:rgba(181,69,27,.8);">Phase 1 (÷6)</div>
         <div class="bpr-head" style="color:rgba(74,124,89,.8);">Phase 2 (÷3)</div>
@@ -1600,7 +1645,7 @@ img{max-width:100%;}
         <div class="bpr-cell bpr-p1 bpr-foot" style="font-weight:700;">€1,955</div>
         <div class="bpr-cell bpr-p2 bpr-foot" style="font-weight:700;">€785</div>
         <div class="bpr-cell bpr-total bpr-foot">€2,740</div>
-      </div>
+      </div></div><!-- /budget-table-scroll -->
       <div class="budget-phase-table-note" style="font-size:10px;color:var(--warm);line-height:1.55;margin-top:6px;">Upgrade options add €46–68pp if taken: Seceda gondola €28 · Lagazuoi cable car €18 · Vogel cable car (Bohinj) €22. Grossglockner toll €38/van = €6pp for 6. Minivan costs split ÷6 in Phase 1; Phase 2 is train and bus only.</div>
     </div>
 
@@ -1878,7 +1923,7 @@ map.fitBounds(L.latLngBounds(routeCoords), { padding: [30, 30] });
 
 
 // ── HIKE SLIDERS (reads static HTML img tags) ──
-document.querySelectorAll('.hs-card').forEach((card) => {
+document.querySelectorAll('.hs-card, .hs-upgrade-card').forEach((card) => {
   const track  = card.querySelector('.hs-track');
   const slides = card.querySelectorAll('.hs-slide');
   const dots   = card.querySelectorAll('.hs-dot');
