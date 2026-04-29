@@ -204,6 +204,7 @@ section{padding:72px 24px;}
 .hb-mod{background:rgba(201,150,58,.2);color:var(--gold);}
 .hb-full{background:rgba(181,69,27,.2);color:#e0896a;}
 .hb-half{background:rgba(61,90,115,.2);color:var(--mist);}
+.hb-hard{background:rgba(181,69,27,.25);color:#e0896a;}
 
 /* ── BUDGET ── */
 .budget-section{background:var(--cream);padding:72px 24px;}
@@ -304,6 +305,39 @@ footer{background:var(--ink);padding:52px 24px;text-align:center;}
 .hs-opt-toggle.opt-open .hs-opt-arrow{transform:rotate(180deg);}
 .hs-opt-body{display:none;padding:4px 0 10px;}
 .hs-opt-body.opt-open{display:block;}
+/* ── FULL-WIDTH GRID FIX FOR PANELS INSIDE .hs-stats ──────────────────
+   .hs-stats uses display:grid; grid-template-columns:1fr 1fr 1fr.
+   Any direct-child toggle/body without grid-column is squeezed into a
+   ~100px cell on mobile, causing badge text to stack letter-by-letter.
+   grid-column:1/-1 spans all three columns = full card width.
+
+   Scope is exact: the > direct-child combinator only matches toggles
+   that are children of .hs-stats — not toggles outside it (Seceda,
+   Lagazuoi, Lago di Braies are all outside hs-stats and unaffected). */
+
+/* Route Optimization (Alpe di Siusi, Tre Cime, Nordkette, Bachalpsee) */
+.hs-stats > .hs-opt-toggle.opt-route {
+  grid-column: 1 / -1;
+}
+.hs-stats > .hs-opt-toggle.opt-route ~ .hs-opt-body {
+  grid-column: 1 / -1;
+}
+
+/* Recommended Optimization (Pasterze, Herzogstand) */
+.hs-stats > .hs-opt-toggle.opt-upgrade {
+  grid-column: 1 / -1;
+}
+.hs-stats > .hs-opt-toggle.opt-upgrade ~ .hs-opt-body {
+  grid-column: 1 / -1;
+}
+
+/* Optional Add-On (Savica) */
+.hs-stats > .hs-opt-toggle.opt-addon {
+  grid-column: 1 / -1;
+}
+.hs-stats > .hs-opt-toggle.opt-addon ~ .hs-opt-body {
+  grid-column: 1 / -1;
+}
 /* Mobile: cap dropdown height and make it scrollable */
 @media(max-width:600px){
   .hs-opt-body.opt-open{
@@ -626,18 +660,19 @@ img{max-width:100%;}
     <div class="s-title reveal" style="color:#fff">A clockwise loop through the Alps</div>
     <div class="route-list reveal">
       <div class="r-stop"><div class="r-dot d-it">1–2</div><div class="r-info"><div class="r-name">🇮🇹 Milan</div><div class="r-meta">2 nights · Arrival city · Duomo, Navigli, Brera</div></div><div class="r-badge">✈ Arrive</div></div>
-      <div class="r-stop"><div class="r-dot d-it">3–8</div><div class="r-info"><div class="r-name">🇮🇹 The Dolomites</div><div class="r-meta">6 nights · Bolzano + Cortina · Tre Cime, Alpe di Siusi, Lago di Braies, Cinque Torri</div></div><div class="r-badge">🚆 Train + 🚗 Car</div></div>
-      <div class="r-stop"><div class="r-dot d-at">9–10</div><div class="r-info"><div class="r-name">🇦🇹 Innsbruck</div><div class="r-meta">2 nights · Tyrol's alpine capital · Nordkette hike, Golden Roof</div></div><div class="r-badge">🚗 Car</div></div>
-      <div class="r-stop"><div class="r-dot d-at">11–12</div><div class="r-info"><div class="r-name">🇦🇹 Grossglockner / Hohe Tauern</div><div class="r-meta">2 nights · Austria's highest peak · High Alpine Road, Pasterze Glacier</div></div><div class="r-badge">🚗 Car</div></div>
-      <div class="r-stop"><div class="r-dot d-at">13</div><div class="r-info"><div class="r-name">🇦🇹 Salzburg</div><div class="r-meta">1 night · Mozart's city · Hohensalzburg fortress, beer halls</div></div><div class="r-badge">🚆 Train</div></div>
-      <div class="r-stop"><div class="r-dot d-de">14–17</div><div class="r-info"><div class="r-name">🇩🇪 Munich + Eibsee + Walchensee</div><div class="r-meta">4 nights · Bavaria · Marienplatz, Zugspitze, Herzogstand hike, lake swimming</div></div><div class="r-badge">🚆 Train</div></div>
-      <div class="r-stop"><div class="r-dot d-ch">18–19</div><div class="r-info"><div class="r-name">🇨🇭 Grindelwald, Switzerland</div><div class="r-meta">1 night · Eiger north face · Bachalpsee hike, First Cliff Walk</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-it">3–8</div><div class="r-info"><div class="r-name">🇮🇹 The Dolomites</div><div class="r-meta">6 nights · Val Gardena + Cortina · Tre Cime, Val di Funes, Lago di Braies, Cinque Torri</div></div><div class="r-badge">🚆 Train + 🚗 Car</div></div>
+      <div class="r-stop"><div class="r-dot d-at">9–10</div><div class="r-info"><div class="r-name">🇦🇹 Innsbruck</div><div class="r-meta">2 nights · Tyrol's alpine capital · Nordkette hike, Golden Roof</div></div><div class="r-badge">🚌 Bus</div></div>
+      <div class="r-stop"><div class="r-dot d-at">11</div><div class="r-info"><div class="r-name">🇦🇹 Heiligenblut — Grossglockner</div><div class="r-meta">1 night · Austria's highest peak · High Alpine Road, Gamsgrubenweg walk</div></div><div class="r-badge">🚗 Car</div></div>
+      <div class="r-stop"><div class="r-dot d-at">12–13</div><div class="r-info"><div class="r-name">🇦🇹 Salzburg + Berchtesgaden</div><div class="r-meta">2 nights · Mozart's city · Eisriesenwelt en route, Königssee, Eagle's Nest day trip</div></div><div class="r-badge">🚗 Car</div></div>
+      <div class="r-stop"><div class="r-dot d-de">14–17</div><div class="r-info"><div class="r-name">🇩🇪 Munich + Eibsee + Herrenchiemsee</div><div class="r-meta">4 nights · Bavaria · Marienplatz, Zugspitze, Herrenchiemsee palace, Hofbräuhaus</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-ch">18</div><div class="r-info"><div class="r-name">🇨🇭 Grindelwald</div><div class="r-meta">1 night · Eiger north face · Bachalpsee hike, First Cliff Walk</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-ch">19–20</div><div class="r-info"><div class="r-name">🇨🇭 Zürich</div><div class="r-meta">1 night · Group farewell · Oeschinensee day trip, 3 fly ZRH · 3 continue east</div></div><div class="r-badge">✈ Split</div></div>
       <div class="r-stop"><div class="r-dot d-si">20–21</div><div class="r-info"><div class="r-name">🇸🇮 Ljubljana</div><div class="r-meta">2 nights · Slovenia's charming capital · Castle, kayaking, riverside cafes</div></div><div class="r-badge">🚆 Train</div></div>
       <div class="r-stop"><div class="r-dot d-si">22</div><div class="r-info"><div class="r-name">🇸🇮 Postojna Cave</div><div class="r-meta">1 day · Underground wonder · Cave train + Predjama Castle</div></div><div class="r-badge">🚌 Bus</div></div>
       <div class="r-stop"><div class="r-dot d-si">23–25</div><div class="r-info"><div class="r-name">🇸🇮 Triglav NP — Bled + Bohinj</div><div class="r-meta">3 nights · Slovenia's crown jewel · Lake Bled, Vintgar Gorge, Savica Falls</div></div><div class="r-badge">🚌 Bus</div></div>
       <div class="r-stop"><div class="r-dot d-it">26</div><div class="r-info"><div class="r-name">🇮🇹 Venice</div><div class="r-meta">1 night · One perfect day · Grand Canal, Rialto, Cicchetti bars</div></div><div class="r-badge">🚆 Train</div></div>
-      <div class="r-stop"><div class="r-dot d-it">27–28</div><div class="r-info"><div class="r-name">🇮🇹 Verona</div><div class="r-meta">2 nights · Roman amphitheatre city · Arena, Piazza delle Erbe, Garda</div></div><div class="r-badge">🚆 Train</div></div>
-      <div class="r-stop"><div class="r-dot d-it">29–30</div><div class="r-info"><div class="r-name">🇮🇹 Milan</div><div class="r-meta">Return · Last Supper, Sforzesco · Loop complete ✓</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-it">27</div><div class="r-info"><div class="r-name">🇮🇹 Verona</div><div class="r-meta">1 night · Roman amphitheatre city · Arena, Piazza delle Erbe, Garda</div></div><div class="r-badge">🚆 Train</div></div>
+      <div class="r-stop"><div class="r-dot d-it">28–30</div><div class="r-info"><div class="r-name">🇮🇹 Milan</div><div class="r-meta">Return · Last Supper, Sforzesco · Loop complete ✓</div></div><div class="r-badge">🚆 Train</div></div>
     </div>
   </div>
 </section>
@@ -664,7 +699,7 @@ img{max-width:100%;}
         <img src="https://images.unsplash.com/photo-1631450774451-826da721b277?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Milan Duomo" loading="lazy" onerror="handleCardImageError(this)">
         <div class="p-over"></div>
         <div class="p-content">
-          <div class="p-country">🇮🇹 Italy · Days 1–2 &amp; 29–30</div>
+          <div class="p-country">🇮🇹 Italy · Days 1–2 &amp; 28–30</div>
           <div class="p-name">Milan</div>
           <div class="p-days">Start &amp; finish</div>
           <div class="p-tags"><span class="ptag">Duomo</span><span class="ptag">Last Supper</span><span class="ptag">Navigli</span></div>
@@ -686,7 +721,7 @@ img{max-width:100%;}
         <img src="https://images.unsplash.com/photo-1638829228708-1471e8386075?auto=format&fit=crop&w=1600&h=900&q=80" alt="Austrian Alps" loading="lazy" onerror="handleCardImageError(this)">
         <div class="p-over"></div>
         <div class="p-content">
-          <div class="p-country">🇦🇹 Austria · Days 11–12</div>
+          <div class="p-country">🇦🇹 Austria · Day 11</div>
           <div class="p-name">Grossglockner</div>
           <div class="p-days">High Alpine Road + Pasterze Glacier</div>
           <div class="p-tags"><span class="ptag">3,798m peak</span><span class="ptag">Glacier walk</span><span class="ptag">Alpine road</span></div>
@@ -697,7 +732,7 @@ img{max-width:100%;}
         <img src="https://images.unsplash.com/photo-1741195238202-57ebaee0ac28?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Salzburg" loading="lazy" onerror="handleCardImageError(this)">
         <div class="p-over"></div>
         <div class="p-content">
-          <div class="p-country">🇦🇹 Austria · Day 13</div>
+          <div class="p-country">🇦🇹 Austria · Days 12–13</div>
           <div class="p-name">Salzburg</div>
           <div class="p-days">1 night · Mozart's city</div>
           <div class="p-tags"><span class="ptag">Fortress</span><span class="ptag">Gardens</span></div>
@@ -708,7 +743,7 @@ img{max-width:100%;}
         <img src="https://images.unsplash.com/photo-1741120026139-8ae0036ebe6d?auto=format&fit=crop&w=1000&h=1400&q=80" alt="Munich" loading="lazy" onerror="handleCardImageError(this)">
         <div class="p-over"></div>
         <div class="p-content">
-          <div class="p-country">🇩🇪 Germany · Days 14–15</div>
+          <div class="p-country">🇩🇪 Germany · Days 14–17</div>
           <div class="p-name">Munich</div>
           <div class="p-days">2 nights · Bavaria's capital</div>
           <div class="p-tags"><span class="ptag">Marienplatz</span><span class="ptag">Beer halls</span></div>
@@ -791,11 +826,12 @@ img{max-width:100%;}
         <div class="dc-body">
           <div class="dc-country">🇮🇹 Italy · Days 3–8</div>
           <div class="dc-name">The Dolomites</div>
-          <div class="dc-dates">6 nights · Bolzano base + Cortina base · Rental car required</div>
+          <div class="dc-dates">6 nights · Val Gardena (Ortisei) base + Cortina base · Minivan #1 required</div>
           <div class="dc-desc">The highlight of the entire trip. Jaw-dropping pink-tinged rock spires, emerald lakes, flower-covered meadows and rifugio culture. Give this the time it deserves.</div>
           <div class="dc-highlights">
             <span class="dc-tag hike">🥾 Tre Cime di Lavaredo circuit</span>
-            <span class="dc-tag hike">🥾 Alpe di Siusi plateau</span>
+            <span class="dc-tag hike">🥾 Seceda ridge + Val di Funes (Day 4)</span>
+            <span class="dc-tag hike">🥾 Alpe di Siusi plateau (Day 5)</span>
             <span class="dc-tag hike">🥾 Cinque Torri trail</span>
             <span class="dc-tag sight">💙 Lago di Braies</span>
             <span class="dc-tag food">🍽️ Rifugio lunch stops</span>
@@ -809,9 +845,9 @@ img{max-width:100%;}
           <div class="dc-country">🇦🇹 Austria · Days 9–10</div>
           <div class="dc-name">Innsbruck</div>
           <div class="dc-dates">2 nights · Car → train handoff point</div>
-          <div class="dc-desc">A stunning alpine city nestled in the Inn Valley with peaks rising directly above the old town. The Nordkette cable car launches you from the city centre to 2,200m.</div>
+          <div class="dc-desc">A stunning alpine city nestled in the Inn Valley with peaks rising directly above the old town. The Nordkette cable car launches you from the city centre to 2,334m.</div>
           <div class="dc-highlights">
-            <span class="dc-tag hike">🥾 Nordkette ridge walk (2,200m)</span>
+            <span class="dc-tag hike">🥾 Nordkette ridge walk (2,334m)</span>
             <span class="dc-tag sight">🏛️ Golden Roof old town</span>
             <span class="dc-tag sight">🎿 Bergisel ski jump tower</span>
             <span class="dc-tag food">🥩 Tyrolean gröstl dinner</span>
@@ -822,9 +858,9 @@ img{max-width:100%;}
       <div class="dest-card-big">
         <div class="dc-photo"><img src="https://images.unsplash.com/photo-1638829228708-1471e8386075?auto=format&fit=crop&w=1200&h=900&q=80" alt="Grossglockner" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
         <div class="dc-body">
-          <div class="dc-country">🇦🇹 Austria · Days 11–12</div>
+          <div class="dc-country">🇦🇹 Austria · Day 11</div>
           <div class="dc-name">Grossglockner &amp; Hohe Tauern</div>
-          <div class="dc-dates">2 nights · Heiligenblut base</div>
+          <div class="dc-dates">1 night · Heiligenblut base</div>
           <div class="dc-desc">Austria's highest peak at 3,798m and Europe's most spectacular mountain toll road. The Pasterze is Austria's largest glacier — accessible and breathtaking even for beginners.</div>
           <div class="dc-highlights">
             <span class="dc-tag hike">🥾 Pasterze Glacier walk</span>
@@ -838,9 +874,9 @@ img{max-width:100%;}
       <div class="dest-card-big">
         <div class="dc-photo"><img src="https://images.unsplash.com/photo-1741195238202-57ebaee0ac28?auto=format&fit=crop&w=1200&h=900&q=80" alt="Salzburg" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
         <div class="dc-body">
-          <div class="dc-country">🇦🇹 Austria · Day 13</div>
+          <div class="dc-country">🇦🇹 Austria · Days 12–13</div>
           <div class="dc-name">Salzburg</div>
-          <div class="dc-dates">1 night · Return car here, switch to train</div>
+          <div class="dc-dates">2 nights · Arrive via Werfen (Eisriesenwelt) · Return Minivan #2 Day 13 morning</div>
           <div class="dc-desc">Mozart's birthplace and one of the world's most beautiful baroque cities. One day is genuinely enough to hit the highlights — then onwards to Bavaria.</div>
           <div class="dc-highlights">
             <span class="dc-tag sight">🏰 Hohensalzburg Fortress</span>
@@ -855,13 +891,13 @@ img{max-width:100%;}
         <div class="dc-photo"><img src="https://images.unsplash.com/photo-1732130319312-99c2da8522fb?auto=format&fit=crop&w=1200&h=900&q=80" alt="Munich" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
         <div class="dc-body">
           <div class="dc-country">🇩🇪 Germany · Days 14–17</div>
-          <div class="dc-name">Munich + Eibsee + Walchensee</div>
-          <div class="dc-dates">4 nights · Munich base · Both alpine lakes as day trips by Bayern Ticket</div>
-          <div class="dc-desc">Bavaria at its best. Munich for culture and beer halls, then two of Germany's most beautiful mountain lakes — Eibsee under the Zugspitze, and quieter Walchensee for swimming and ridge views. Both done as day trips from Munich, keeping logistics simple.</div>
+          <div class="dc-name">Munich + Eibsee + Herrenchiemsee</div>
+          <div class="dc-dates">4 nights · Munich base · Eibsee/Zugspitze (Day 16) · Herrenchiemsee palace (Day 17)</div>
+          <div class="dc-desc">Bavaria at its best. Munich for culture and beer halls, then Germany's highest peak (Zugspitze) and Ludwig II's Versailles-inspired island palace on Lake Chiemsee. Two completely different day trips, both easy from Munich by Bayern Ticket.</div>
           <div class="dc-highlights">
             <span class="dc-tag sight">🏛️ Marienplatz &amp; English Garden</span>
             <span class="dc-tag hike">🥾 Eibsee lake circuit (7 km)</span>
-            <span class="dc-tag hike">🥾 Herzogstand summit (2.5 hrs)</span>
+            <span class="dc-tag sight">🏛️ Herrenchiemsee palace (Hall of Mirrors)</span>
             <span class="dc-tag sight">🏔️ Zugspitze cable car</span>
           </div>
         </div>
@@ -870,9 +906,9 @@ img{max-width:100%;}
       <div class="dest-card-big">
         <div class="dc-photo"><img src="https://images.unsplash.com/photo-1691029950483-b636986bab47?auto=format&fit=crop&w=1200&h=900&q=80" alt="Grindelwald" loading="lazy" onerror="handleCardImageError(this)"><div class="dc-photo-over"></div></div>
         <div class="dc-body">
-          <div class="dc-country">🇨🇭 Switzerland · Days 18–19</div>
+          <div class="dc-country">🇨🇭 Switzerland · Days 18–20</div>
           <div class="dc-name">Grindelwald + Zürich</div>
-          <div class="dc-dates">1 night Grindelwald · 1 night Zürich transit en route to Ljubljana</div>
+          <div class="dc-dates">1 night Grindelwald · Group farewell night in Zürich · 3 fly ZRH · 3 continue east</div>
           <div class="dc-desc">The Eiger's north face looms over Grindelwald — one night is right for this trip. After the Bachalpsee hike, an afternoon train to Zürich breaks the journey to Ljubljana into two manageable legs and adds a bonus evening in one of Europe's most beautiful lakeside cities.</div>
           <div class="dc-highlights">
             <span class="dc-tag hike">🥾 Bachalpsee alpine lake hike</span>
@@ -964,40 +1000,40 @@ img{max-width:100%;}
       <div class="days-list">
         <div class="day-row"><div class="d-num">DAY 1<span class="d-date">SUN<br>Aug 2</span></div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-arr">ARRIVE</span>✈ Airport pickup 10:05 AM · Check in, settle into Navigli · Aperitivo along the canal, explore Brera at sunset</div></div>
         <div class="day-row"><div class="d-num">DAY 2<span class="d-date">MON<br>Aug 3</span></div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Duomo &amp; rooftop terrace, Sforzesco Castle, Parco Sempione</div></div>
-        <div class="day-row"><div class="d-num">DAY 3<span class="d-date">TUE<br>Aug 4</span></div><div class="d-loc"><div class="d-loc-name">Bolzano</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Milan → Bolzano (2.5 hrs). Pick up rental car. Old town, Ötzi museum</div></div>
-        <div class="day-row"><div class="d-num">DAY 4<span class="d-date">WED<br>Aug 5</span></div><div class="d-loc"><div class="d-loc-name">Alpe di Siusi</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>🥾 Full-day hike on Europe's largest high-altitude plateau. Cable car from Ortisei</div></div>
-        <div class="day-row"><div class="d-num">DAY 5<span class="d-date">THU<br>Aug 6</span></div><div class="d-loc"><div class="d-loc-name">Bolzano area</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Lago di Carezza, Passo Gardena scenic drive, Rifugio lunch</div></div>
-        <div class="day-row"><div class="d-num">DAY 6<span class="d-date">FRI<br>Aug 7</span></div><div class="d-loc"><div class="d-loc-name">Cortina</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Great Dolomites Road → 🥾 Cinque Torri stop at Passo Falzarego (on route, no detour). Arrive Cortina overnight</div></div>
-        <div class="day-row"><div class="d-num">DAY 7<span class="d-date">SAT<br>Aug 8</span></div><div class="d-loc"><div class="d-loc-name">Lago di Braies</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">HIKE</span>⚠️ Pre-book parking! Depart 6:15am. 🥾 Lago di Braies lake circuit. Relaxed afternoon in Cortina</div></div>
-        <div class="day-row"><div class="d-num">DAY 8<span class="d-date">SUN<br>Aug 9</span></div><div class="d-loc"><div class="d-loc-name">Tre Cime</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">HIKE</span>🥾 Tre Cime di Lavaredo full circuit (9.5 km, 3–4 hrs). Full dedicated day — nothing else stacked</div></div>
+        <div class="day-row"><div class="d-num">DAY 3<span class="d-date">TUE<br>Aug 4</span></div><div class="d-loc"><div class="d-loc-name">Val Gardena</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Milan → Bolzano (train, 2.5 hrs) · Pick up Minivan #1 · Drive to Ortisei, Val Gardena (~40 min) · Village orientation + provisions run</div></div>
+        <div class="day-row"><div class="d-num">DAY 4<span class="d-date">WED<br>Aug 5</span></div><div class="d-loc"><div class="d-loc-name">Seceda &amp; Val di Funes</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 Morning: Seceda ridge (2,518m) via Ortisei gondola · Odle/Geisler spires face-on · Afternoon: Val di Funes · Santa Maddalena Panorama Trail · Iconic church + spire backdrop</div></div>
+        <div class="day-row"><div class="d-num">DAY 5<span class="d-date">THU<br>Aug 6</span></div><div class="d-loc"><div class="d-loc-name">Alpe di Siusi</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 Morning: Alpe di Siusi plateau (cable car from Ortisei) · Europe’s largest high-altitude meadow · Afternoon: Lago di Carezza · Mirror reflection of Latemar massif · Late-afternoon light is best</div></div>
+        <div class="day-row"><div class="d-num">DAY 6<span class="d-date">FRI<br>Aug 7</span></div><div class="d-loc"><div class="d-loc-name">Cortina</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Val Gardena → Passo Falzarego · 🥾 Cinque Torri (WWI trenches + 5 towers, ~2 hrs) · Optional: Lagazuoi cable car (360° panorama, 2,778m) · Arrive Cortina overnight</div></div>
+        <div class="day-row"><div class="d-num">DAY 7<span class="d-date">SAT<br>Aug 8</span></div><div class="d-loc"><div class="d-loc-name">Lago di Braies</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>⚠️ Pre-book parking at pragserwildsee.it · Depart 6:15am · 🥾 Braies circuit (3.5 km, turquoise lake) · Back in Cortina by 10:30am · Relaxed afternoon</div></div>
+        <div class="day-row"><div class="d-num">DAY 8<span class="d-date">SUN<br>Aug 9</span></div><div class="d-loc"><div class="d-loc-name">Tre Cime</div><div class="d-loc-tag">🇮🇹 DOLOMITES</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>⚠️ Pre-book SP49 slot at auronzo.info · Depart 6:15am · 🥾 Tre Cime circuit (9.5 km) · + Cadini di Misurina viewpoint via Trail 117 (1.5–2 hrs, no extra cost)</div></div>
       </div>
     </div>
 
     <div class="phase reveal">
       <div class="phase-hdr"><span class="phase-num">PHASE 02</span><div class="phase-line"></div></div>
       <div class="phase-name">🇦🇹 Austria</div>
-      <div class="phase-desc">Aug 10–14 · Tyrol, the highest Alpine road, and Mozart's city</div>
+      <div class="phase-desc">Aug 10–14 · Tyrol, Grossglockner, Eisriesenwelt ice caves, Salzburg + Berchtesgaden</div>
       <div class="days-list">
-        <div class="day-row"><div class="d-num">DAY 9<span class="d-date">MON<br>Aug 10</span></div><div class="d-loc"><div class="d-loc-name">Innsbruck</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-bus">BUS</span>Return Minivan #1 → Bolzano. FlixBus Bolzano → Innsbruck (~€9pp, 1h 50m). Arrive afternoon, explore old town</div></div>
-        <div class="day-row"><div class="d-num">DAY 10<span class="d-date">TUE<br>Aug 11</span></div><div class="d-loc"><div class="d-loc-name">Innsbruck</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>Morning: 🥾 Nordkette cable car to 2,334m + ridge hike. Bergisel tower. Afternoon: pick up Minivan #2. Tyrolean dinner</div></div>
-        <div class="day-row"><div class="d-num">DAY 11<span class="d-date">WED<br>Aug 12</span></div><div class="d-loc"><div class="d-loc-name">Grossglockner</div><div class="d-loc-tag">🇦🇹 HOHE TAUERN</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Early departure 7:30am (Minivan #2). Grossglockner High Alpine Road (€38 toll). Franz-Josefs-Höhe. Overnight Heiligenblut</div></div>
-        <div class="day-row"><div class="d-num">DAY 12<span class="d-date">THU<br>Aug 13</span></div><div class="d-loc"><div class="d-loc-name">Hohe Tauern NP</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-car">HIKE</span>🥾 Pasterze Glacier walk (2 hrs, easy). Alpine meadow walks. Drive to Salzburg</div></div>
-        <div class="day-row"><div class="d-num">DAY 13<span class="d-date">FRI<br>Aug 14</span></div><div class="d-loc"><div class="d-loc-name">Salzburg</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Drop Minivan #2 (Austria → Austria, ~€75 one-way fee). Hohensalzburg fortress, Mirabell Gardens, Augustinerbräu</div></div>
+        <div class="day-row"><div class="d-num">DAY 9<span class="d-date">MON<br>Aug 10</span></div><div class="d-loc"><div class="d-loc-name">Innsbruck</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-bus">TRANSIT</span>Cortina → Bolzano (Minivan #1 return) · FlixBus or EC train Bolzano → Innsbruck (~1h 50m, ~€10pp) · Arrive afternoon · Altstadt walk: Golden Roof, old town dinner</div></div>
+        <div class="day-row"><div class="d-num">DAY 10<span class="d-date">TUE<br>Aug 11</span></div><div class="d-loc"><div class="d-loc-name">Innsbruck</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 Nordkette cable car to 2,334m · Ridge walk Hafelekar → Seegrube · Back in Innsbruck by noon · ⚠️ Afternoon: pick up Minivan #2 (hard 3pm internal deadline)</div></div>
+        <div class="day-row"><div class="d-num">DAY 11<span class="d-date">WED<br>Aug 12</span></div><div class="d-loc"><div class="d-loc-name">Grossglockner</div><div class="d-loc-tag">🇦🇹 HOHE TAUERN</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Depart Innsbruck 7:30am (Minivan #2) · Grossglockner High Alpine Road (toll ~€38) · Franz-Josefs-Höhe views · 🥾 Gamsgrubenweg trail · 1 night Heiligenblut</div></div>
+        <div class="day-row"><div class="d-num">DAY 12<span class="d-date">THU<br>Aug 13</span></div><div class="d-loc"><div class="d-loc-name">Salzburg</div><div class="d-loc-tag">🇦🇹 AUSTRIA</div></div><div class="d-act"><span class="badge b-car">DRIVE</span>Heiligenblut → 🧊 Werfen: Eisriesenwelt ice caves (world’s largest, ~3.5 hrs, ⚠️ pre-book) · Arrive Salzburg ~4:30pm · Mirabell Gardens · Augustinerbräu dinner</div></div>
+        <div class="day-row"><div class="d-num">DAY 13<span class="d-date">FRI<br>Aug 14</span></div><div class="d-loc"><div class="d-loc-name">Berchtesgaden</div><div class="d-loc-tag">🇩🇪 DAY TRIP</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>From Salzburg · Return Minivan #2 morning · Train → Berchtesgaden (~55 min) · ⛵ Königssee electric boat to St. Bartholomä · Eagle’s Nest (⚠️ pre-book kehlsteinhaus.de)</div></div>
       </div>
     </div>
 
     <div class="phase reveal">
       <div class="phase-hdr"><span class="phase-num">PHASE 03</span><div class="phase-line"></div></div>
       <div class="phase-name">🇩🇪 Bavaria + 🇨🇭 Switzerland</div>
-      <div class="phase-desc">Aug 15–20 · Alpine lakes, Germany's highest peak, one night in Zürich en route to Slovenia</div>
+      <div class="phase-desc">Aug 15–21 · Bavaria day trips, Germany’s highest peak, Bernese Oberland, and group farewell in Zürich</div>
       <div class="days-list">
-        <div class="day-row"><div class="d-num">DAY 14<span class="d-date">SAT<br>Aug 15</span></div><div class="d-loc"><div class="d-loc-name">Munich</div><div class="d-loc-tag">🇩🇪 GERMANY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Salzburg → Munich (1.5 hrs). English Garden, Marienplatz, Hofbräuhaus</div></div>
-        <div class="day-row"><div class="d-num">DAY 15<span class="d-date">SUN<br>Aug 16</span></div><div class="d-loc"><div class="d-loc-name">Munich</div><div class="d-loc-tag">🇩🇪 GERMANY</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Deutsches Museum, Nymphenburg Palace gardens, beer garden evening</div></div>
-        <div class="day-row"><div class="d-num">DAY 16<span class="d-date">MON<br>Aug 17</span></div><div class="d-loc"><div class="d-loc-name">Eibsee / Zugspitze</div><div class="d-loc-tag">🇩🇪 BAVARIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Day trip to Garmisch. 🥾 Eibsee circuit (7 km). Zugspitze cable car to summit</div></div>
-        <div class="day-row"><div class="d-num">DAY 17<span class="d-date">TUE<br>Aug 18</span></div><div class="d-loc"><div class="d-loc-name">Walchensee</div><div class="d-loc-tag">🇩🇪 DAY TRIP</div></div><div class="d-act"><span class="badge b-bus">BUS</span>Day trip from Munich. 🥾 Herzogstand cable car + panoramic views. Swim in the lake. Return Munich by evening</div></div>
-        <div class="day-row"><div class="d-num">DAY 18<span class="d-date">WED<br>Aug 19</span></div><div class="d-loc"><div class="d-loc-name">Grindelwald</div><div class="d-loc-tag">🇨🇭 SWITZERLAND</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Munich → Grindelwald (~4.5 hrs). Arrive afternoon. First views of the Eiger north face</div></div>
-        <div class="day-row"><div class="d-num">DAY 19<span class="d-date">THU<br>Aug 20</span></div><div class="d-loc"><div class="d-loc-name">Grindelwald → Zürich</div><div class="d-loc-tag">🇨🇭 SWITZERLAND</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 First gondola + Bachalpsee hike (2.5 hrs). First Cliff Walk. Afternoon train to Zürich. Overnight Zürich</div></div>
-        <div class="day-row" style="background:rgba(201,150,58,.06);border-left:3px solid rgba(201,150,58,.4)"><div class="d-num" style="font-size:9px;color:var(--gold)">✈ NOTE</div><div class="d-loc"><div class="d-loc-name" style="font-size:11px;color:var(--gold)">Partial Departure</div><div class="d-loc-tag">🇨🇭 ZÜRICH</div></div><div class="d-act" style="font-size:10px;color:#6a5a3a;font-style:italic;">Some travelers depart from Zürich Aug 18–20. Zürich Airport connects to most major hubs — flights from ZRH are straightforward to book independently. Remaining group continues to Ljubljana on Day 20.</div></div>
+        <div class="day-row"><div class="d-num">DAY 14<span class="d-date">SAT<br>Aug 15</span></div><div class="d-loc"><div class="d-loc-name">Munich</div><div class="d-loc-tag">🇩🇪 GERMANY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Optional: Hohensalzburg fortress morning (open 9am) · BRB Meridian → Munich (~1.5 hrs, Bayern Ticket valid) · ⚠️ Bavarian public holiday · English Garden + Marienplatz + Hofbräuhaus</div></div>
+        <div class="day-row"><div class="d-num">DAY 15<span class="d-date">SUN<br>Aug 16</span></div><div class="d-loc"><div class="d-loc-name">Munich</div><div class="d-loc-tag">🇩🇪 GERMANY</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Nymphenburg Palace + gardens · English Garden (Kleinhesseloher See) · Olympiapark tower · Hofbräuhaus evening · Optional full-day alt: Neuschwanstein Castle (book months ahead)</div></div>
+        <div class="day-row"><div class="d-num">DAY 16<span class="d-date">MON<br>Aug 17</span></div><div class="d-loc"><div class="d-loc-name">Eibsee / Zugspitze</div><div class="d-loc-tag">🇩🇪 BAVARIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Day trip → Garmisch · 🥾 Eibsee circuit (7 km flat loop) · ⚠️ Pre-booked Zugspitze cable car to 2,962m summit · Germany’s highest point · Return Munich evening</div></div>
+        <div class="day-row"><div class="d-num">DAY 17<span class="d-date">TUE<br>Aug 18</span></div><div class="d-loc"><div class="d-loc-name">Herrenchiemsee</div><div class="d-loc-tag">🇩🇪 BAVARIA</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Day trip → Prien am Chiemsee (~1 hr, Bayern Ticket) · Boat to Herreninsel · Ludwig II’s Versailles (75m Hall of Mirrors) · Optional: Fraueninsel convent island · Return Munich evening</div></div>
+        <div class="day-row"><div class="d-num">DAY 18<span class="d-date">WED<br>Aug 19</span></div><div class="d-loc"><div class="d-loc-name">Grindelwald</div><div class="d-loc-tag">🇨🇭 SWITZERLAND</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>EC 08:53 Munich → Zürich (direct, 3.5 hrs) → Interlaken Ost → Grindelwald (~15:08) · First Eiger north face views from village · Early night for tomorrow</div></div>
+        <div class="day-row"><div class="d-num">DAY 19<span class="d-date">THU<br>Aug 20</span></div><div class="d-loc"><div class="d-loc-name">Grindelwald + Zürich</div><div class="d-loc-tag">🇨🇭 SWITZERLAND</div></div><div class="d-act"><span class="badge b-walk">HIKE</span>🥾 Firstbahn gondola + Bachalpsee hike · First Cliff Walk · Afternoon: Oeschinensee via Kandersteg (⚠️ pre-book at oeschinensee.ch) · Arrive Zürich evening · Group farewell dinner</div></div>
+        <div class="day-row" style="background:rgba(201,150,58,.06);border-left:3px solid rgba(201,150,58,.4)"><div class="d-num">DAY 20<span class="d-date">FRI<br>Aug 21</span></div><div class="d-loc"><div class="d-loc-name" style="color:var(--gold)">✈ Zürich Split</div><div class="d-loc-tag">🇨🇭 ZÜRICH</div></div><div class="d-act"><span class="badge b-arr">SPLIT</span>✈️ 3 fly ZRH (7:10am) · 🚆 3 continue: Zürich → Ljubljana (~6 hrs) · End of the 20-day Milan Loop · Slovenia phase begins for the continuing group</div></div>
       </div>
     </div>
 
@@ -1020,7 +1056,7 @@ img{max-width:100%;}
       <div class="phase-name">🇮🇹 Back to Italy</div>
       <div class="phase-desc">Aug 27–31 · Venice for a day, a Roman city as finale, home to Milan</div>
       <div class="days-list">
-        <div class="day-row"><div class="d-num">DAY 26<span class="d-date">THU<br>Aug 27</span></div><div class="d-loc"><div class="d-loc-name">Venice</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Bled → Venice (2.5 hrs). Vaporetto Line 1, Rialto market, Cannaregio, cicchetti</div></div>
+        <div class="day-row"><div class="d-num">DAY 26<span class="d-date">THU<br>Aug 27</span></div><div class="d-loc"><div class="d-loc-name">Venice</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Bohinj → Venice (2.5 hrs). Vaporetto Line 1, Rialto market, Cannaregio, cicchetti</div></div>
         <div class="day-row"><div class="d-num">DAY 27<span class="d-date">FRI<br>Aug 28</span></div><div class="d-loc"><div class="d-loc-name">Verona</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Venice → Verona (1.5 hrs). Arena di Verona, Piazza delle Erbe, Juliet's House. 1 night only</div></div>
         <div class="day-row"><div class="d-num">DAY 28<span class="d-date">SAT<br>Aug 29</span></div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-train">TRAIN</span>Verona → Milan (1 hr). Arrive midday. Last Supper (pre-booked!). Sforzesco Castle, Brera evening</div></div>
         <div class="day-row"><div class="d-num">DAY 29<span class="d-date">SUN<br>Aug 30</span></div><div class="d-loc"><div class="d-loc-name">Milan</div><div class="d-loc-tag">🇮🇹 ITALY</div></div><div class="d-act"><span class="badge b-walk">CITY</span>Buffer day. Navigli canal, Pinacoteca di Brera, Duomo interior. Repack, rest, final gelato in Brera</div></div>
@@ -1041,6 +1077,91 @@ img{max-width:100%;}
 
     <div class="hike-slider-grid reveal">
 
+      <!-- ── UPGRADE: Seceda Ridge ── -->
+      <div class="hs-upgrade-card">
+        <div class="hs-upgrade-ribbon">🔥 RECOMMENDED UPGRADE</div>
+        <div class="hs-slider" id="s0u">
+          <div class="hs-track" id="t0u">
+            <div class="hs-slide"><img src="https://www.suedtirol.info/content/dam/idm/im/images/experiences/activities/s/s_2/smgpoid219139423c32313f1510b254d89e3a7/BAB4F1FD901B57B8149BF9706BD3649E.jpeg" alt="Seceda Odle spires"></div>
+            <div class="hs-slide"><img src="https://northabroad.com/wp-content/uploads/seceda-PITA4660-Enhanced-cover.jpg" alt="Seceda ridge view"></div>
+            <div class="hs-slide"><img src="https://footprintsleftabroad.com/wp-content/uploads/2025/07/Seceda-ridge-line-2-1024x473.jpg"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-upgrade-why">
+          <div class="hs-upgrade-why-title">Why Seceda is the Day 4 morning priority</div>
+          <div class="hs-upgrade-why-row"><span class="hs-upgrade-why-icon">⭐</span><span><strong>Views:</strong> Alpe di Siusi looks across a plateau. Seceda puts you on a narrow ridge at 2,518m with the Odle/Geisler spires — 500m vertical fins of rock — directly in front of you. One of the most photographed landscapes in the Alps.</span></div>
+          <div class="hs-upgrade-why-row"><span class="hs-upgrade-why-icon">📍</span><span><strong>Same base:</strong> Seceda gondola departs from Ortisei — the same village as the Alpe di Siusi cable car. Zero rerouting required.</span></div>
+          <div class="hs-upgrade-why-row"><span class="hs-upgrade-why-icon">🗓️</span><span><strong>Day 4 plan:</strong> Seceda morning (8am–noon) → Ortisei lunch → Val di Funes/Santa Maddalena afternoon (12:30–17:30). Alpe di Siusi moved to Day 5 morning for better pacing.</span></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Seceda Ridge Walk</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Ortisei, Val Gardena &middot; Day 4 · Morning primary activity</div>
+          <div class="hs-desc">Stand on a narrow grass ridge at 2,500m facing the Odle spires — a row of near-vertical 500m rock fins rising from the hillside. This is the quintessential Dolomites photograph, and it cannot be seen from the plateau below.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">4–6 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~200 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">ridge undulation</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">3–4 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">incl. cable car</span></span></div>
+          </div>
+          <div class="hs-cost-note">💶 Seceda gondola — ~€28pp return · 2 stages Ortisei → Furnes → Seceda</div>
+          <button class="hs-opt-toggle opt-upgrade" style="margin-top:14px" onclick="toggleOpt(this)">
+            <span class="hs-opt-badge hs-opt-badge-upgrade">UPGRADE</span>
+            Access &amp; Logistics
+            <span class="hs-opt-arrow">&#9660;</span>
+          </button>
+          <div class="hs-opt-body">
+            <div class="hs-opt-row"><span class="hs-opt-icon">🚡</span><span><strong>Gondola:</strong> Seceda gondola from Ortisei (2 stages — village → Furnes → Seceda, 2,518m). ~€25–30pp return. Opens 8am. Book online or at station.</span></div>
+            <div class="hs-opt-row"><span class="hs-opt-icon">🧭</span><span><strong>Route:</strong> From the top station, walk the <strong>Rasciesa ridge</strong> southward toward Col Raiser. The Odle spires face you directly from the ridge. Return same way or descend via forest trail to Ortisei (30 min walk).</span></div>
+            <div class="hs-opt-row"><span class="hs-opt-icon">🕗</span><span><strong>Best timing:</strong> First gondola at 8am. The Odle spires catch morning light from the east — most dramatic before 10am. Crowds build significantly from 10:30am onward.</span></div>
+            <div class="hs-opt-row"><span class="hs-opt-icon">⚠️</span><span>Same parking constraint as Alpe di Siusi — park at Ortisei Parkhaus, 5 min walk to both gondola bases. If doing both on Day 4, this is the ideal morning start.</span></div>
+            <div class="hs-opt-verdict v-upgrade">🔥 If the group does only one activity on Day 4, Seceda is the stronger scenic experience. If doing both: Seceda 8–11am, Alpe di Siusi 12–4pm.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE: Val di Funes ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="sVDF">
+          <div class="hs-track" id="tVDF">
+            <div class="hs-slide"><img src="https://youshouldgohere.com/wp-content/uploads/2024/08/4W8A5595-1200x750.jpg" alt="Val di Funes Santa Maddalena"></div>
+            <div class="hs-slide"><img src="https://www.sudtirol.com/images/02-valli/16-val-di-funes/val-di-funes-da-vedere-1.jpg" alt="Dolomites Odle spires"></div>
+            <div class="hs-slide"><img src="https://thetwirlingtraveler.nl/wp-content/uploads/2024/07/IMG_5356.jpg" alt="Alpine meadow Dolomites"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Val di Funes — Santa Maddalena</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Val di Funes, South Tyrol &middot; Day 4 · Afternoon (Wed, Aug 5)</div>
+          <div class="hs-desc">The most-photographed Dolomites scene: the tiny Romanesque church of San Giovanni in Ranui framed by the vertical Odle/Geisler spires (3,025m). The Santa Maddalena Panorama Trail loops 1.5 hrs above the valley for the elevated angle.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">~5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">Panorama loop</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~250 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">gentle ascent</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">1.5–2.5 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">trail + views</span></span></div>
+          <div class="hs-cost-note">💶 Free · Parking in Bergerplatz village lot ~€4/day · ⚠️ Vehicle barriers from May 2026 — park in village and walk up</div>
+
+          <button class="hs-opt-toggle opt-route" onclick="toggleOpt(this)">
+            <span class="hs-opt-badge hs-opt-badge-route">ROUTE TIP</span>
+            Best Viewpoint Strategy
+            <span class="hs-opt-arrow">&#9660;</span>
+          </button>
+          <div class="hs-opt-body">
+<div class="hs-opt-row"><span class="hs-opt-icon">🧭</span><span><strong>Best vantage:</strong> Walk the Panorama Trail uphill behind the village for the classic elevated shot — church in foreground, Odle spires behind. Ground-level roadside view is also iconic.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🌅</span><span><strong>Light:</strong> Late afternoon 14:00–17:00 gives warm side-lighting on the spires. Morning is backlit — afternoon is dramatically better for photos.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">📍</span><span><strong>San Giovanni in Ranui:</strong> The small chapel across the meadow (5-min walk from village) is a different and equally iconic angle. Interior open when unlocked — simple and beautiful.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⚠️</span><span><strong>2026 access:</strong> New vehicle barriers prevent driving up the valley road. Park at Bergerplatz in Santa Maddalena village (€4/day) and walk ~10 min up to the panorama trailhead.</span></div>
+            <div class="hs-opt-verdict v-route">🧭 Late afternoon is the decisive timing factor — arrive by 14:00 for best light on the spires.</div>
+          </div>
+          </div>
+          <div class="hs-logistics">
+            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
+            <div class="hs-log-body">
+<div class="hs-log-group"><div class="hs-log-gtitle">Getting There</div><div class="hs-log-row"><span class="hs-log-icon">🚗</span><span><strong>Drive from Ortisei:</strong> SS242 north → A22 exit Chiusa/Klausen → SS242 west into Val di Funes → Santa Maddalena. ~40 min. Leave Ortisei by 12:30–13:00.</span></div><div class="hs-log-row"><span class="hs-log-icon">🅿️</span><span><strong>Parking:</strong> Bergerplatz lot in Santa Maddalena village. ~€4/day. ⚠️ Barriers prevent driving further up — mandatory from May 2026.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Trail & Timing</div><div class="hs-log-row"><span class="hs-log-icon">🥾</span><span><strong>Panorama Trail:</strong> Follow signs from village to 'Panoramaweg'. Ascends behind village through farmland to viewpoint terrace. 1.5 hr loop. No navigation needed.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total time:</strong> 2.5–3 hrs including walk from parking, trail, chapel visit, and return. Back in Ortisei by 18:00.</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ── HIKE 1: Alpe di Siusi ── -->
       <div class="hs-card">
         <div class="hs-slider" id="s0">
@@ -1055,7 +1176,7 @@ img{max-width:100%;}
         </div>
         <div class="hs-body">
           <div class="hs-top"><div class="hs-name">Alpe di Siusi Plateau</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-full">Full Day</span></div></div>
-          <div class="hs-loc">Dolomites, Italy · Day 4</div>
+          <div class="hs-loc">Ortisei, Val Gardena · Day 5 (Thu, Aug 6)</div>
           <div class="hs-desc">Cable car from Ortisei to Europe's largest high-altitude plateau. Gentle meadow paths with jaw-dropping Dolomite peaks in every direction.</div>
           <div class="hs-stats">
             <div class="hs-stat"><span class="hs-stat-val">8–12 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
@@ -1083,142 +1204,7 @@ img{max-width:100%;}
       </div>
 
 
-      <!-- ── UPGRADE: Seceda Ridge ── -->
-      <div class="hs-upgrade-card">
-        <div class="hs-upgrade-ribbon">🔥 RECOMMENDED UPGRADE</div>
-        <div class="hs-slider" id="s0u">
-          <div class="hs-track" id="t0u">
-            <div class="hs-slide"><img src="https://www.suedtirol.info/content/dam/idm/im/images/experiences/activities/s/s_2/smgpoid219139423c32313f1510b254d89e3a7/BAB4F1FD901B57B8149BF9706BD3649E.jpeg" alt="Seceda Odle spires"></div>
-            <div class="hs-slide"><img src="https://northabroad.com/wp-content/uploads/seceda-PITA4660-Enhanced-cover.jpg" alt="Seceda ridge view"></div>
-            <div class="hs-slide"><img src="https://footprintsleftabroad.com/wp-content/uploads/2025/07/Seceda-ridge-line-2-1024x473.jpg"></div>
-          </div>
-          <button class="hs-arrow hs-prev">&#8592;</button>
-          <button class="hs-arrow hs-next">&#8594;</button>
-          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
-        </div>
-        <div class="hs-upgrade-why">
-          <div class="hs-upgrade-why-title">Why this upgrades Alpe di Siusi</div>
-          <div class="hs-upgrade-why-row"><span class="hs-upgrade-why-icon">⭐</span><span><strong>Views:</strong> Alpe di Siusi looks across a plateau. Seceda puts you on a narrow ridge at 2,500m with the Odle/Geisler spires — 500m vertical fins of rock — directly in front of you. One of the most photographed landscapes in the Alps.</span></div>
-          <div class="hs-upgrade-why-row"><span class="hs-upgrade-why-icon">📍</span><span><strong>Same base:</strong> Seceda gondola departs from Ortisei — the same village as the Alpe di Siusi cable car. Zero rerouting required.</span></div>
-          <div class="hs-upgrade-why-row"><span class="hs-upgrade-why-icon">🗓️</span><span><strong>Best combined plan:</strong> Seceda gondola in the morning (8am) → ridge walk → return by noon → Alpe di Siusi plateau loop in the afternoon (2–3 hrs). Both done in the same day from the same car park.</span></div>
-        </div>
-        <div class="hs-body">
-          <div class="hs-top"><div class="hs-name">Seceda Ridge Walk</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
-          <div class="hs-loc">Ortisei, Val Gardena &middot; Day 4 (combine with Alpe di Siusi)</div>
-          <div class="hs-desc">Stand on a narrow grass ridge at 2,500m facing the Odle spires — a row of near-vertical 500m rock fins rising from the hillside. This is the quintessential Dolomites photograph, and it cannot be seen from the plateau below.</div>
-          <div class="hs-stats">
-            <div class="hs-stat"><span class="hs-stat-val">4–6 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">~200 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">ridge undulation</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">3–4 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">incl. cable car</span></span></div>
-          </div>
-          <div class="hs-cost-note">💶 Seceda gondola — ~€28pp return · 2 stages Ortisei → Furnes → Seceda</div>
-          <button class="hs-opt-toggle opt-upgrade" style="margin-top:14px" onclick="toggleOpt(this)">
-            <span class="hs-opt-badge hs-opt-badge-upgrade">UPGRADE</span>
-            Access &amp; Logistics
-            <span class="hs-opt-arrow">&#9660;</span>
-          </button>
-          <div class="hs-opt-body">
-            <div class="hs-opt-row"><span class="hs-opt-icon">🚡</span><span><strong>Gondola:</strong> Seceda gondola from Ortisei (2 stages — village → Furnes → Seceda, 2,518m). ~€25–30pp return. Opens 8am. Book online or at station.</span></div>
-            <div class="hs-opt-row"><span class="hs-opt-icon">🧭</span><span><strong>Route:</strong> From the top station, walk the <strong>Rasciesa ridge</strong> southward toward Col Raiser. The Odle spires face you directly from the ridge. Return same way or descend via forest trail to Ortisei (30 min walk).</span></div>
-            <div class="hs-opt-row"><span class="hs-opt-icon">🕗</span><span><strong>Best timing:</strong> First gondola at 8am. The Odle spires catch morning light from the east — most dramatic before 10am. Crowds build significantly from 10:30am onward.</span></div>
-            <div class="hs-opt-row"><span class="hs-opt-icon">⚠️</span><span>Same parking constraint as Alpe di Siusi — park at Ortisei Parkhaus, 5 min walk to both gondola bases. If doing both on Day 4, this is the ideal morning start.</span></div>
-            <div class="hs-opt-verdict v-upgrade">🔥 If the group does only one activity on Day 4, Seceda is the stronger scenic experience. If doing both: Seceda 8–11am, Alpe di Siusi 12–4pm.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── HIKE 2: Tre Cime ── -->
-      <div class="hs-card">
-        <div class="hs-slider" id="s1">
-          <div class="hs-track" id="t1">
-            <div class="hs-slide"><img src="https://www.guidedolomiti.com/wp-content/uploads/walk-around-the-tre-cime.webp" alt="Tre Cime photo 1"></div>
-            <div class="hs-slide"><img src="https://theportuguesetraveler.com/wp-content/uploads/2024/09/tre-cime-di-lavaredo-drei-zinnen-hike-127.jpg.webp" alt="Tre Cime photo 2"></div>
-            <div class="hs-slide"><img src="https://media.tourispo.com/images/ecu/entity/e_hike/hike_summer-walk-around-the-tre-cime-di-lavaredo-drei-zinnen-three-peaks-_n68884-65213-0_l.jpg" alt="Tre Cime photo 3"></div>
-          </div>
-          <button class="hs-arrow hs-prev">&#8592;</button>
-          <button class="hs-arrow hs-next">&#8594;</button>
-          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
-        </div>
-        <div class="hs-body">
-          <div class="hs-top"><div class="hs-name">Tre Cime di Lavaredo</div><div class="hs-badges"><span class="hb hb-mod">Moderate</span><span class="hb hb-full">Full Day</span></div></div>
-          <div class="hs-loc">Dolomites, Italy · Day 8</div>
-          <div class="hs-desc">The crown jewel of the Dolomites. 9.5 km circuit around three iconic spires. Rocky alpine terrain, rifugio lunch, absolutely unforgettable.</div>
-          <div class="hs-stats">
-            <div class="hs-stat"><span class="hs-stat-val">9.5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">~500 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">round trip gain</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">4–5 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">with stops</span></span></div>
-
-          <button class="hs-opt-toggle opt-route" onclick="toggleOpt(this)">
-            <span class="hs-opt-badge hs-opt-badge-route">ROUTE OPTIMIZATION</span>
-            Direction &amp; Viewpoints
-            <span class="hs-opt-arrow">&#9660;</span>
-          </button>
-          <div class="hs-opt-body">
-<div class="hs-opt-row"><span class="hs-opt-icon">🔄</span><span><strong>Go counterclockwise</strong> — the north face (the dramatic concave face) is reached early while legs are fresh, and morning light hits it directly.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🏔️</span><span>At <strong>Forcella di Lavaredo</strong> (the saddle, ~2,454m, highest point): pause here for 20–30 min. Most groups rush through — this is the single best viewpoint on the circuit.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">👀</span><span>On the descent from Forcella back to Rifugio Auronzo: look behind you. The south face of the towers appears from this angle and most people miss it entirely while focusing on the path.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🍽️</span><span><strong>Rifugio Lavaredo</strong> for lunch (halfway, ~12:30pm arrival): book a table in advance for August. Walk-in queues can be 45+ min.</span></div>
-            <div class="hs-opt-verdict v-route">🧭 Counterclockwise + deliberate time at Forcella di Lavaredo transforms this from a great walk into a truly memorable one.</div>
-          </div>
-          </div>
-          <div class="hs-logistics">
-            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
-            <div class="hs-log-body">
-<div class="hs-log-group"><div class="hs-log-gtitle">Driving &amp; Parking</div><div class="hs-log-row"><span class="hs-log-icon">🅿️</span><span><strong>Parking:</strong> Rifugio Auronzo (2,333m)  -  paid toll booth on access road SP49. <strong>€30/vehicle</strong>, collected at the barrier. No separate parking fee at the top.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏰</span><span><strong>Access restriction:</strong> In August, SP49 is typically restricted to private vehicles 9am–5pm. Outside those hours, access is free-flow. <em>Verify current policy before August 2026 at comune.cortina.bl.it.</em></span></div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>If you miss the window:</strong> Shuttle buses run from Lago di Misurina (~5km away, free parking). ~€5pp each way. Add 20 min to your start.</span></div><div class="hs-log-row"><span class="hs-log-icon">📍</span><span><strong>Approach:</strong> From Cortina, take SS51 north then SS48 east toward Misurina. SP49 is the final toll access road. Total ~45 min from Cortina.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Timing &amp; Trail Reality</div><div class="hs-log-row"><span class="hs-log-icon">🕕</span><span><strong>Best start:</strong> Leave Cortina by 6:30am. Arrive Rifugio Auronzo by 7:15–7:30am before the access restriction and before the lot fills (~200 spaces).</span></div><div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Route:</strong> Loop  -  counterclockwise recommended. Best tower views face north/east, which gets morning light heading counterclockwise.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total experience:</strong> 4–5 hrs including rifugio lunch stop, photo time at Forcella di Lavaredo, and descent back to the car park.</span></div><div class="hs-log-row"><span class="hs-log-icon">🏔️</span><span>Key stop: Rifugio Lavaredo (halfway) for coffee/lunch. Forcella di Lavaredo saddle (the high point at ~2,454m) is the single best viewpoint.</span></div></div><div class="hs-log-warn">August is the most crowded month of the year at Tre Cime. Arriving after 9am means shuttle buses, full parking, and narrow trails clogged with tour groups. This is non-negotiable: 6:30am departure.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── HIKE: Lago di Braies ── -->
-      <div class="hs-card">
-        <div class="hs-slider" id="sB">
-          <div class="hs-track" id="tB">
-            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/09/Lago-di-Braies-Dolomites.jpg.optimal.jpg" alt="Lago di Braies"></div>
-            <div class="hs-slide"><img src="https://www.swedishnomad.com/wp-content/images/2018/07/lago-di-braies-3.jpg" alt="Lago di Braies boathouse"></div>
-            <div class="hs-slide"><img src="https://www.overseashiker.com/wp-content/uploads/2024/03/lago-di-braies-day-hike-3-lago-di-braies.jpg" alt="Lago di Braies overhead view"></div>
-          </div>
-          <button class="hs-arrow hs-prev">&#8592;</button>
-          <button class="hs-arrow hs-next">&#8594;</button>
-          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
-        </div>
-        <div class="hs-body">
-          <div class="hs-top"><div class="hs-name">Lago di Braies Circuit</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
-          <div class="hs-loc">Dolomites, Italy &middot; Day 7 (Fri, Aug 8) &middot; Pre-booked parking essential</div>
-          <div class="hs-desc">One of Europe's most beautiful mountain lakes — turquoise water, pale rock spires, and a famous red boathouse. The lake circuit is flat and accessible. Arrive before 7:15am or access is denied.</div>
-          <div class="hs-stats">
-            <div class="hs-stat"><span class="hs-stat-val">3.5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">~50 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">essentially flat</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">45–60 min</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">lake circuit only</span></span></div>
-          </div>
-          <button class="hs-opt-toggle opt-addon" style="margin-top:14px" onclick="toggleOpt(this)">
-            <span class="hs-opt-badge hs-opt-badge-addon">OPTIONAL ADD-ON</span>
-            Uphill Extension (North End)
-            <span class="hs-opt-arrow">&#9660;</span>
-          </button>
-          <div class="hs-opt-body">
-            <div class="hs-opt-row"><span class="hs-opt-icon">📍</span><span>At the far (north) end of the lake circuit, a trail climbs toward <strong>Rifugio Biella</strong>. The first 30–45 min of ascent (~150–200m gain) delivers an overhead perspective of the lake — the bird's-eye view that makes Braies famous in photographs.</span></div>
-            <div class="hs-opt-row"><span class="hs-opt-icon">⏱️</span><span>Add 1–1.5 hrs to the morning. No need to reach the full rifugio — turn around when the view opens up (~150m above the lake).</span></div>
-            <div class="hs-opt-row"><span class="hs-opt-icon">💡</span><span>The full Rifugio Biella ascent (900m, 3–4 hrs each way) is outside the scope of this trip. The partial extension is the right call.</span></div>
-            <div class="hs-opt-verdict v-addon">🤏 Marginal improvement — worth doing only if the group feels fresh after the circuit and has an extra hour before the trailhead fills with coaches (by 9am).</div>
-          </div>
-          <div class="hs-logistics">
-            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
-            <div class="hs-log-body">
-              <div class="hs-log-group"><div class="hs-log-gtitle">Driving &amp; Parking</div>
-                <div class="hs-log-row"><span class="hs-log-icon">⚠️</span><span><strong>Pre-booking mandatory:</strong> Parking must be reserved in advance at the official Lago di Braies parking system. In August, lots are fully allocated to pre-booked vehicles. Walk-ups are redirected to shuttle buses.</span></div>
-                <div class="hs-log-row"><span class="hs-log-icon">🕕</span><span><strong>Depart 6:15am</strong> from Cortina accommodation. Arrive at the lake by 7:15am to secure parking and beat the coach groups arriving from 8:30am onward.</span></div>
-                <div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Shuttle alternative:</strong> If parking is full, a shuttle runs from Braies di Fuori (~3km away, free parking). Add 20 min to your timeline and book the shuttle in advance too.</span></div>
-              </div>
-              <div class="hs-log-group"><div class="hs-log-gtitle">Route &amp; Timing</div>
-                <div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Walk counterclockwise</strong> (right from the hotel when facing the lake). The Seekofel peak views are in front of you on the return leg when morning light is best.</span></div>
-                <div class="hs-log-row"><span class="hs-log-icon">🚣</span><span>Rowing boats available from the dock near the hotel — 30 min on the water gives a unique perspective. Book on arrival (not in advance).</span></div>
-                <div class="hs-log-row"><span class="hs-log-icon">📸</span><span>The classic postcard shot is from the south end, looking north across the lake toward the mountain. Achievable before 7:30am without other people in frame.</span></div>
-              </div>
-              <div class="hs-log-warn">Pre-book parking well in advance — this is non-negotiable in August. Without a reservation you will be turned away at the barrier.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-            <!-- ── HIKE 3: Cinque Torri ── -->
+      <!-- ── HIKE 3: Cinque Torri ── -->
       <div class="hs-card">
         <div class="hs-slider" id="s2">
           <div class="hs-track" id="t2">
@@ -1293,6 +1279,179 @@ img{max-width:100%;}
         </div>
       </div>
 
+      <!-- ── HIKE: Lago di Braies ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="sB">
+          <div class="hs-track" id="tB">
+            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/09/Lago-di-Braies-Dolomites.jpg.optimal.jpg" alt="Lago di Braies"></div>
+            <div class="hs-slide"><img src="https://www.swedishnomad.com/wp-content/images/2018/07/lago-di-braies-3.jpg" alt="Lago di Braies boathouse"></div>
+            <div class="hs-slide"><img src="https://www.overseashiker.com/wp-content/uploads/2024/03/lago-di-braies-day-hike-3-lago-di-braies.jpg" alt="Lago di Braies overhead view"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Lago di Braies Circuit</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Dolomites, Italy &middot; Day 7 (Sat, Aug 8) &middot; Pre-booked parking essential</div>
+          <div class="hs-desc">One of Europe's most beautiful mountain lakes — turquoise water, pale rock spires, and a famous red boathouse. The lake circuit is flat and accessible. Arrive before 7:15am or access is denied.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">3.5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~50 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">essentially flat</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">45–60 min</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">lake circuit only</span></span></div>
+          </div>
+          <button class="hs-opt-toggle opt-addon" style="margin-top:14px" onclick="toggleOpt(this)">
+            <span class="hs-opt-badge hs-opt-badge-addon">OPTIONAL ADD-ON</span>
+            Uphill Extension (North End)
+            <span class="hs-opt-arrow">&#9660;</span>
+          </button>
+          <div class="hs-opt-body">
+            <div class="hs-opt-row"><span class="hs-opt-icon">📍</span><span>At the far (north) end of the lake circuit, a trail climbs toward <strong>Rifugio Biella</strong>. The first 30–45 min of ascent (~150–200m gain) delivers an overhead perspective of the lake — the bird's-eye view that makes Braies famous in photographs.</span></div>
+            <div class="hs-opt-row"><span class="hs-opt-icon">⏱️</span><span>Add 1–1.5 hrs to the morning. No need to reach the full rifugio — turn around when the view opens up (~150m above the lake).</span></div>
+            <div class="hs-opt-row"><span class="hs-opt-icon">💡</span><span>The full Rifugio Biella ascent (900m, 3–4 hrs each way) is outside the scope of this trip. The partial extension is the right call.</span></div>
+            <div class="hs-opt-verdict v-addon">🤏 Marginal improvement — worth doing only if the group feels fresh after the circuit and has an extra hour before the trailhead fills with coaches (by 9am).</div>
+          </div>
+          <div class="hs-logistics">
+            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
+            <div class="hs-log-body">
+              <div class="hs-log-group"><div class="hs-log-gtitle">Driving &amp; Parking</div>
+                <div class="hs-log-row"><span class="hs-log-icon">⚠️</span><span><strong>Pre-booking mandatory:</strong> Parking must be reserved in advance at the official Lago di Braies parking system. In August, lots are fully allocated to pre-booked vehicles. Walk-ups are redirected to shuttle buses.</span></div>
+                <div class="hs-log-row"><span class="hs-log-icon">🕕</span><span><strong>Depart 6:15am</strong> from Cortina accommodation. Arrive at the lake by 7:15am to secure parking and beat the coach groups arriving from 8:30am onward.</span></div>
+                <div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Shuttle alternative:</strong> If parking is full, a shuttle runs from Braies di Fuori (~3km away, free parking). Add 20 min to your timeline and book the shuttle in advance too.</span></div>
+              </div>
+              <div class="hs-log-group"><div class="hs-log-gtitle">Route &amp; Timing</div>
+                <div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Walk counterclockwise</strong> (right from the hotel when facing the lake). The Seekofel peak views are in front of you on the return leg when morning light is best.</span></div>
+                <div class="hs-log-row"><span class="hs-log-icon">🚣</span><span>Rowing boats available from the dock near the hotel — 30 min on the water gives a unique perspective. Book on arrival (not in advance).</span></div>
+                <div class="hs-log-row"><span class="hs-log-icon">📸</span><span>The classic postcard shot is from the south end, looking north across the lake toward the mountain. Achievable before 7:30am without other people in frame.</span></div>
+              </div>
+              <div class="hs-log-warn">Pre-book parking well in advance — this is non-negotiable in August. Without a reservation you will be turned away at the barrier.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE: Lago di Sorapis (Optional) ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="sSRP">
+          <div class="hs-track" id="tSRP">
+            <div class="hs-slide"><img src="https://thephotohikes.com/wp-content/uploads/2024/01/Lago-di-Sorapis-11.jpg" alt="Turquoise alpine lake Dolomites"></div>
+            <div class="hs-slide"><img src="http://daisyraetravel.com/wp-content/uploads/2018/02/img_0403.jpg" alt="Mountain trail cable sections"></div>
+            <div class="hs-slide"><img src="https://images.squarespace-cdn.com/content/v1/5a3bb03b4c326d76de73ddaa/1595688834186-QMNM2MKZOPPXK7W4IAW7/The_Common_Wanderer_-5.jpg" alt="Dolomites alpine scenery"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Lago di Sorapis</div><div class="hs-badges"><span class="hb hb-hard">Demanding</span><span class="hb hb-half">4–5 hrs</span></div></div>
+          <div class="hs-loc">Passo Tre Croci, Cortina &middot; Day 7 · Optional afternoon (Sat, Aug 8)</div>
+          <div class="hs-desc">⚡ High-energy afternoon add-on for fit groups. After Braies return (~11am), drive 20 min from Cortina to Passo Tre Croci. Trail 215 leads to a milky-turquoise glacial lake tucked beneath sheer limestone walls — a category of scenery found nowhere else in the Dolomites.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">11 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~500 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">moderate ascent</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">4–5 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">incl. cable sections</span></span></div>
+          <div class="hs-cost-note">💶 Free · No booking required · Passo Tre Croci car park ~€5/day · Best visited afternoon (morning hikers depart 1–3pm, freeing parking)</div>
+
+          <button class="hs-opt-toggle opt-route" onclick="toggleOpt(this)">
+            <span class="hs-opt-badge hs-opt-badge-route">⚡ HIGH-ENERGY OPTIONAL</span>
+            Fitness & Decision Guide
+            <span class="hs-opt-arrow">&#9660;</span>
+          </button>
+          <div class="hs-opt-body">
+<div class="hs-opt-row"><span class="hs-opt-icon">⚡</span><span><strong>Who this suits:</strong> Fit, heights-tolerant group members. The trail includes cable-assisted sections on exposed rock ledges — not technical but psychologically demanding if heights are an issue.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⏱️</span><span><strong>Decision window:</strong> Commit by 11:30am after Braies return. If leaving Cortina after noon, the return timing becomes tight with afternoon thunderstorm risk.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🌤️</span><span><strong>Weather:</strong> Start no later than 12:30pm. August afternoon thunderstorms are common in this area — be below the ridge by 3pm.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🔄</span><span><strong>If skipping Sorapis:</strong> Low-effort alternatives — (a) Tofana cable car (summit views, 30 min from Cortina) or (b) Passo Giau scenic drive (25 min, stunning roadside panoramas, no hiking required).</span></div>
+            <div class="hs-opt-verdict v-route">⚡ Only commit if group is rested and heights-confident after Braies. Otherwise Passo Giau drive gives comparable scenery with zero effort.</div>
+          </div>
+          </div>
+          <div class="hs-logistics">
+            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
+            <div class="hs-log-body">
+<div class="hs-log-group"><div class="hs-log-gtitle">Getting There</div><div class="hs-log-row"><span class="hs-log-icon">🚗</span><span><strong>Drive from Cortina:</strong> SP48 east toward Passo Tre Croci (2,212m), ~20 min. Trailhead is at the pass car park.</span></div><div class="hs-log-row"><span class="hs-log-icon">🅿️</span><span><strong>Parking:</strong> Passo Tre Croci car park. ~€5/day. Counterintuitively easier in the afternoon — morning hikers free up spaces from 1pm onward.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Trail Reality</div><div class="hs-log-row"><span class="hs-log-icon">🥾</span><span><strong>Trail 215:</strong> Starts flat, then descends and ascends with cable-assisted exposed sections. Not a via ferrata — cables are fixed aids on steep scrambles, not full climbing equipment routes.</span></div><div class="hs-log-row"><span class="hs-log-icon">🎯</span><span><strong>Payoff:</strong> The lake is milky-turquoise (glacial flour in suspension). The colour is most vivid in calm conditions — afternoon light is excellent.</span></div><div class="hs-log-row"><span class="hs-log-icon">⚠️</span><span><strong>Return timing:</strong> Allow 2.5 hrs return. Be back at trailhead by 5pm maximum.</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE 2: Tre Cime ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="s1">
+          <div class="hs-track" id="t1">
+            <div class="hs-slide"><img src="https://www.guidedolomiti.com/wp-content/uploads/walk-around-the-tre-cime.webp" alt="Tre Cime photo 1"></div>
+            <div class="hs-slide"><img src="https://theportuguesetraveler.com/wp-content/uploads/2024/09/tre-cime-di-lavaredo-drei-zinnen-hike-127.jpg.webp" alt="Tre Cime photo 2"></div>
+            <div class="hs-slide"><img src="https://media.tourispo.com/images/ecu/entity/e_hike/hike_summer-walk-around-the-tre-cime-di-lavaredo-drei-zinnen-three-peaks-_n68884-65213-0_l.jpg" alt="Tre Cime photo 3"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Tre Cime di Lavaredo</div><div class="hs-badges"><span class="hb hb-mod">Moderate</span><span class="hb hb-full">Full Day</span></div></div>
+          <div class="hs-loc">Dolomites, Italy · Day 8</div>
+          <div class="hs-desc">The crown jewel of the Dolomites. 9.5 km circuit around three iconic spires. Rocky alpine terrain, rifugio lunch, absolutely unforgettable.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">9.5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~500 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">round trip gain</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">4–5 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">with stops</span></span></div>
+
+          <button class="hs-opt-toggle opt-route" onclick="toggleOpt(this)">
+            <span class="hs-opt-badge hs-opt-badge-route">ROUTE OPTIMIZATION</span>
+            Direction &amp; Viewpoints
+            <span class="hs-opt-arrow">&#9660;</span>
+          </button>
+          <div class="hs-opt-body">
+<div class="hs-opt-row"><span class="hs-opt-icon">🔄</span><span><strong>Go counterclockwise</strong> — the north face (the dramatic concave face) is reached early while legs are fresh, and morning light hits it directly.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🏔️</span><span>At <strong>Forcella di Lavaredo</strong> (the saddle, ~2,454m, highest point): pause here for 20–30 min. Most groups rush through — this is the single best viewpoint on the circuit.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">👀</span><span>On the descent from Forcella back to Rifugio Auronzo: look behind you. The south face of the towers appears from this angle and most people miss it entirely while focusing on the path.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🍽️</span><span><strong>Rifugio Lavaredo</strong> for lunch (halfway, ~12:30pm arrival): book a table in advance for August. Walk-in queues can be 45+ min.</span></div>
+            <div class="hs-opt-verdict v-route">🧭 Counterclockwise + deliberate time at Forcella di Lavaredo transforms this from a great walk into a truly memorable one.</div>
+          </div>
+          </div>
+          <div class="hs-logistics">
+            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
+            <div class="hs-log-body">
+<div class="hs-log-group"><div class="hs-log-gtitle">Driving &amp; Parking</div><div class="hs-log-row"><span class="hs-log-icon">🅿️</span><span><strong>Parking:</strong> Rifugio Auronzo (2,333m)  -  paid toll booth on access road SP49. <strong>€30/vehicle</strong>, collected at the barrier. No separate parking fee at the top.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏰</span><span><strong>Access restriction:</strong> In August, SP49 is typically restricted to private vehicles 9am–5pm. Outside those hours, access is free-flow. <em>Verify current policy before August 2026 at comune.cortina.bl.it.</em></span></div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>If you miss the window:</strong> Shuttle buses run from Lago di Misurina (~5km away, free parking). ~€5pp each way. Add 20 min to your start.</span></div><div class="hs-log-row"><span class="hs-log-icon">📍</span><span><strong>Approach:</strong> From Cortina, take SS51 north then SS48 east toward Misurina. SP49 is the final toll access road. Total ~45 min from Cortina.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Timing &amp; Trail Reality</div><div class="hs-log-row"><span class="hs-log-icon">🕕</span><span><strong>Best start:</strong> Leave Cortina by 6:30am. Arrive Rifugio Auronzo by 7:15–7:30am before the access restriction and before the lot fills (~200 spaces).</span></div><div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Route:</strong> Loop  -  counterclockwise recommended. Best tower views face north/east, which gets morning light heading counterclockwise.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total experience:</strong> 4–5 hrs including rifugio lunch stop, photo time at Forcella di Lavaredo, and descent back to the car park.</span></div><div class="hs-log-row"><span class="hs-log-icon">🏔️</span><span>Key stop: Rifugio Lavaredo (halfway) for coffee/lunch. Forcella di Lavaredo saddle (the high point at ~2,454m) is the single best viewpoint.</span></div></div><div class="hs-log-warn">August is the most crowded month of the year at Tre Cime. Arriving after 9am means shuttle buses, full parking, and narrow trails clogged with tour groups. This is non-negotiable: 6:30am departure.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HIKE: Cadini di Misurina (Day 8 add-on) ── -->
+      <div class="hs-card">
+        <div class="hs-slider" id="sCDN">
+          <div class="hs-track" id="tCDN">
+            <div class="hs-slide"><img src="https://www.earthtrekkers.com/wp-content/uploads/2022/08/How-to-Hike-to-Cadini-di-Misurina.jpg" alt="Cadini di Misurina spires Dolomites"></div>
+            <div class="hs-slide"><img src="https://thephotohikes.com/wp-content/uploads/2025/11/Cadini-di-Misurina-Hike-New-2.jpg" alt="Dolomites rock spires"></div>
+            <div class="hs-slide"><img src="https://thephotohikes.com/wp-content/uploads/2025/10/Cadini-di-Misurina.jpg" alt="Alpine trail Dolomites"></div>
+          </div>
+          <button class="hs-arrow hs-prev">&#8592;</button>
+          <button class="hs-arrow hs-next">&#8594;</button>
+          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
+        </div>
+        <div class="hs-body">
+          <div class="hs-top"><div class="hs-name">Cadini di Misurina Viewpoint</div><div class="hs-badges"><span class="hb hb-easy">Easy–Mod</span><span class="hb hb-half">1.5–2 hrs</span></div></div>
+          <div class="hs-loc">Rifugio Auronzo, Tre Cime area &middot; Day 8 · After Tre Cime loop (Sun, Aug 9)</div>
+          <div class="hs-desc">★ The highest-ROI addition on the trip. After completing the Tre Cime circuit (~11:30am), walk Trail 117 from Rifugio Auronzo to the Cadini viewpoint — the iconic composition of spired limestone towers that appears in virtually every Dolomites travel photograph.</div>
+          <div class="hs-stats">
+            <div class="hs-stat"><span class="hs-stat-val">4–5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~250 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">gentle gain</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">1.5–2 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">return from Auronzo</span></span></div>
+          <div class="hs-cost-note">💶 Free · SP49 parking pass valid 12 hours — no additional cost · Last exposed section above saddle is optional — saddle views alone are excellent</div>
+
+          <button class="hs-opt-toggle opt-route" onclick="toggleOpt(this)">
+            <span class="hs-opt-badge hs-opt-badge-route">★ ADDED VALUE</span>
+            Why This Is Worth It
+            <span class="hs-opt-arrow">&#9660;</span>
+          </button>
+          <div class="hs-opt-body">
+<div class="hs-opt-row"><span class="hs-opt-icon">★</span><span><strong>What Tre Cime doesn't show you:</strong> The Tre Cime circuit circles the three towers at close range. The Cadini viewpoint shows the full Dolomites spire composition — towers, distance, and context — that makes the photos you've seen in magazines.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">📍</span><span><strong>Starting point:</strong> Trail 117 begins at Rifugio Auronzo (the same car park as Tre Cime access). Walk 200m east of the rifugio to find the trail sign.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⚠️</span><span><strong>Exposed final section:</strong> The last 15 min above the saddle is on open scree — exposed but not technical. Groups with heights concerns can stop at the saddle for an already excellent view.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🕐</span><span><strong>Timing:</strong> Late-morning light (11:30am–1pm) hits the Cadini faces well. Return to car park by 1:30–2pm for the drive back to Cortina.</span></div>
+            <div class="hs-opt-verdict v-route">★ Do this. It adds 2 hours to an already-planned early morning and costs nothing. The resulting photograph is the one people share from the entire trip.</div>
+          </div>
+          </div>
+          <div class="hs-logistics">
+            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
+            <div class="hs-log-body">
+<div class="hs-log-group"><div class="hs-log-gtitle">Access</div><div class="hs-log-row"><span class="hs-log-icon">🅿️</span><span><strong>Same car park as Tre Cime:</strong> SP49 road, Rifugio Auronzo (2,333m). Your pre-booked 07:00 SP49 slot covers a 12-hr window — you are already here.</span></div><div class="hs-log-row"><span class="hs-log-icon">🥾</span><span><strong>Trail 117:</strong> Departs east from Rifugio Auronzo. Well-marked. Some rocky terrain. Gain altitude steadily to the saddle, then optional exposed section to viewpoint proper.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Practical</div><div class="hs-log-row"><span class="hs-log-icon">🍽️</span><span><strong>Lunch:</strong> Rifugio Auronzo serves simple meals (soups, pasta, hot drinks). Walk-in in late morning — queues thin after 13:00.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total Day 8 timeline:</strong> 06:15 SP49 entry → Tre Cime circuit (4 hrs) → Cadini Trail 117 (2 hrs) → Rifugio lunch → drive back to Cortina by 15:00–16:00.</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ── HIKE 4: Nordkette ── -->
       <div class="hs-card">
         <div class="hs-slider" id="s3">
@@ -1347,13 +1506,13 @@ img{max-width:100%;}
           <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
         </div>
         <div class="hs-body">
-          <div class="hs-top"><div class="hs-name">Pasterze Glacier Walk</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
-          <div class="hs-loc">Grossglockner, Austria · Day 12</div>
-          <div class="hs-desc">Walk to the toe of Austria's largest glacier from Franz-Josefs-Höhe. Flat and accessible. The blue-white glacier landscape is extraordinary.</div>
+          <div class="hs-top"><div class="hs-name">Gamsgrubenweg + Franz-Josefs-Höhe</div><div class="hs-badges"><span class="hb hb-easy">Easy</span><span class="hb hb-half">Half Day</span></div></div>
+          <div class="hs-loc">Heiligenblut / Franz-Josefs-Höhe, Austria · Day 11</div>
+          <div class="hs-desc">⚠️ Pasterze funicular permanently closed 2025. Franz-Josefs-Höhe terrace views remain spectacular. The Gamsgrubenweg nature trail (6 km loop) offers close-range views across the Pasterze moraine and Grossglockner (3,798m) from a protected alpine path.</div>
           <div class="hs-stats">
-            <div class="hs-stat"><span class="hs-stat-val">6 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">~180 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">round trip gain</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">2–3 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">with funicular</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">6 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">Gamsgrube loop</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">~200 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">moderate gain</span></span></div>
+            <div class="hs-stat"><span class="hs-stat-val">2–3 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">from terrace</span></span></div>
 
           <button class="hs-opt-toggle opt-upgrade" onclick="toggleOpt(this)">
             <span class="hs-opt-badge hs-opt-badge-upgrade">RECOMMENDED OPTIMIZATION</span>
@@ -1405,47 +1564,6 @@ img{max-width:100%;}
         </div>
       </div>
 
-      <!-- ── HIKE 7: Herzogstand ── -->
-      <div class="hs-card">
-        <div class="hs-slider" id="s6">
-          <div class="hs-track" id="t6">
-            <div class="hs-slide"><img src="https://thealwayswanderer.com/wp-content/uploads/2024/10/herzogstand-summit-scaled.jpeg" alt="Herzogstand photo 1"></div>
-            <div class="hs-slide"><img src="https://www.mountainmoments.com/wp-content/uploads/2021/06/Herzogstand-hiking-adventure-trip.jpeg" alt="Herzogstand photo 2"></div>
-            <div class="hs-slide"><img src="https://static.wixstatic.com/media/4606bb_c99e4f0d2ecc45dfaf56abf9b130db32~mv2.jpeg/v1/fill/w_2000,h_1500,al_c,q_90/Germania-croce-escursione-hikesoftheworld.jpeg" alt="Herzogstand photo 3"></div>
-          </div>
-          <button class="hs-arrow hs-prev">&#8592;</button>
-          <button class="hs-arrow hs-next">&#8594;</button>
-          <div class="hs-dots"><div class="hs-dot active"></div><div class="hs-dot"></div><div class="hs-dot"></div></div>
-        </div>
-        <div class="hs-body">
-          <div class="hs-top"><div class="hs-name">Herzogstand Summit</div><div class="hs-badges"><span class="hb hb-mod">Moderate</span><span class="hb hb-half">Half Day</span></div></div>
-          <div class="hs-loc">Walchensee, Germany · Day 17</div>
-          <div class="hs-desc">Climb above Walchensee to sweeping panoramic Alps views from 1,731m. Cable car option available. Swim in the lake when you return.</div>
-          <div class="hs-stats">
-            <div class="hs-stat"><span class="hs-stat-val">5 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">with cable car</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">~350 m</span><span class="hs-stat-label">Elevation <span class="hs-stat-sub">with cable car</span></span></div>
-            <div class="hs-stat"><span class="hs-stat-val">2.5–3.5 hrs</span><span class="hs-stat-label">Duration <span class="hs-stat-sub">walking only</span></span></div>
-
-          <div class="hs-cost-note">💶 Herzogstandbahn cable car — ~€20pp return · runs from 9am · Walchensee village</div>
-          <button class="hs-opt-toggle opt-upgrade" onclick="toggleOpt(this)">
-            <span class="hs-opt-badge hs-opt-badge-upgrade">RECOMMENDED OPTIMIZATION</span>
-            Heimgarten Ridge Traverse
-            <span class="hs-opt-arrow">&#9660;</span>
-          </button>
-          <div class="hs-opt-body">
-<div class="hs-opt-row"><span class="hs-opt-icon">🧭</span><span>After reaching Herzogstand summit (1,731m), continue along the ridge to <strong>Heimgarten (1,790m)</strong> — 2 km of sustained ridge walking with 360° views over Walchensee, Kochelsee, and the Bavarian plain.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">📊</span><span>Adds ~2 km and 60m elevation each way. Total on-foot time with traverse: 3.5–4.5 hrs vs 2.5–3.5 hrs for Herzogstand only.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🔄</span><span>From Heimgarten, descend via the trail toward Walchensee lakeshore (different arrival point from the cable car base — short 15-min walk back to the village). Makes the full route a loop rather than an out-and-back.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⚠️</span><span>Bus schedule constraint: with traverse, plan for a 5pm return bus at the latest. Cable car at 9am → traverse → lake swim by 3pm → bus 4–5pm to Munich. Tight but achievable.</span></div>
-            <div class="hs-opt-verdict v-upgrade">🔥 The traverse turns a good summit into an excellent ridge experience. The difference between standing at Herzogstand and walking the full ridge to Heimgarten is substantial — 45 min of sustained panoramic views vs a single viewpoint. Recommended if the group is willing to shorten the lake swim.</div>
-          </div>
-          </div>
-          <div class="hs-logistics">
-            <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
-            <div class="hs-log-body">
-<div class="hs-log-group"><div class="hs-log-gtitle">Access Without Car</div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Step 1:</strong> RVO bus 9622 from Munich (Starnberg/Pasing direction) → Kochel am See or Walchensee. ~1 hr 30 min. Check MVV timetable  -  service is limited (2–3 buses/day). Depart Munich by 8am.</span></div><div class="hs-log-row"><span class="hs-log-icon">🚡</span><span><strong>Step 2:</strong> Herzogstandbahn cable car from the Walchensee lakeshore (at Walchensee village). ~€18–22pp return. Runs from 9am, July–Oct.</span></div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Return bus to Munich:</strong> Check exact times before the trip  -  last bus is typically 5–6pm. Missing it means a taxi to Kochel (~€20) + train home.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Timing &amp; Trail Reality</div><div class="hs-log-row"><span class="hs-log-icon">📊</span><span><strong>Stats clarification:</strong> 8 km / 760 m is the FULL hike from the lake without cable car. With the cable car: ~5 km / ~350 m gain on foot (cable car top station ~1,580m → summit 1,731m → optional Heimgarten 1,790m).</span></div><div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Route with cable car:</strong> Lift to Herzogstand Alm (~1,580m) → summit (1,731m) → optional: continue to Heimgarten (1,790m) via ridge → return same way or loop back to lift. Total on foot: 4–5 km.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total experience:</strong> Bus travel (3 hrs round trip) + cable car + walk + lake swim = full day. Allow 5–6 hrs at the lake/mountain.</span></div><div class="hs-log-row"><span class="hs-log-icon">🏊</span><span>Walchensee swimming: the water is clear and cold (~18–20°C in August). Best beach area is at the south end near Walchensee village.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Practical Tips</div><div class="hs-log-row"><span class="hs-log-icon">⚠️</span><span><strong>Critical:</strong> Confirm the return bus time before you go. The RVO 9622 schedule is thin. Screenshot the timetable offline.</span></div><div class="hs-log-row"><span class="hs-log-icon">💡</span><span>If the cable car is closed or too expensive: the Walchensee lakeshore walk (6.5km flat loop) is a worthwhile alternative. Still a great day trip.</span></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- ── HIKE 8: Bachalpsee ── -->
       <div class="hs-card">
         <div class="hs-slider" id="s7">
@@ -1460,7 +1578,7 @@ img{max-width:100%;}
         </div>
         <div class="hs-body">
           <div class="hs-top"><div class="hs-name">Bachalpsee Alpine Lake</div><div class="hs-badges"><span class="hb hb-easy">Easy–Mod</span><span class="hb hb-half">Half Day</span></div></div>
-          <div class="hs-loc">Grindelwald, Switzerland · Day 19</div>
+          <div class="hs-loc">Grindelwald, Switzerland · Day 19 · Thu Aug 20</div>
           <div class="hs-desc">Take the First gondola then walk 2.5 hrs to a stunning alpine lake that perfectly mirrors the Eiger, Mönch and Jungfrau. Unmissable.</div>
           <div class="hs-stats">
             <div class="hs-stat"><span class="hs-stat-val">7 km</span><span class="hs-stat-label">Distance <span class="hs-stat-sub">round trip</span></span></div>
@@ -1544,19 +1662,20 @@ img{max-width:100%;}
             <span class="hs-opt-arrow">&#9660;</span>
           </button>
           <div class="hs-opt-body">
-<div class="hs-opt-row"><span class="hs-opt-icon">🚡</span><span><strong>Vogel cable car</strong> departs from Ribčev Laz (the main Bohinj bus stop). Ascends to 1,540m in 10 min. ~€20–25pp return (2026 est.).</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⭐</span><span>View: the best overview of the entire Bohinj basin — lake, valley, Julian Alps, and Triglav visible in the distance. The waterfall and lake walk don't give this perspective. This is the only way to see Bohinj from above without a serious hike.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🗓️</span><span><strong>Best sequence for Day 25:</strong> Savica waterfall (morning, 9am) → bus back to Ribčev Laz → lake swim (midday) → Vogel cable car (early afternoon, 2pm) → bus back to Bled by 5pm.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⏱️</span><span>Easy walks at the Vogel top station (~1–2 hrs, flat ski area paths). Or just take the cable car for the view and come straight back down (30 min total).</span></div>
+<div class="hs-opt-row"><span class="hs-opt-icon">🚡</span><span><strong>Vogel cable car</strong> departs from Ribčev Laz (the main Bohinj bus stop). Ascends to 1,540m in 10 min. ~€20–25pp return (2026 est.).</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⭐</span><span>View: the best overview of the entire Bohinj basin — lake, valley, Julian Alps, and Triglav visible in the distance. The waterfall and lake walk don't give this perspective. This is the only way to see Bohinj from above without a serious hike.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">🗓️</span><span><strong>Best sequence for Day 25:</strong> Savica waterfall (morning, 9am) → bus back to Ribčev Laz → lake swim (midday) → Vogel cable car (early afternoon, 2pm) → overnight in Bohinj.</span></div><div class="hs-opt-row"><span class="hs-opt-icon">⏱️</span><span>Easy walks at the Vogel top station (~1–2 hrs, flat ski area paths). Or just take the cable car for the view and come straight back down (30 min total).</span></div>
             <div class="hs-opt-verdict v-addon">🔥 The Bohinj day is currently the most passive day in Slovenia. Vogel converts it into the best overhead perspective of the entire trip's lake segment. Recommended if budget allows (~€20pp extra).</div>
           </div>
           </div>
           <div class="hs-logistics">
             <button class="hs-log-toggle">Trailhead &amp; Logistics <span class="hs-log-arrow">&#9660;</span></button>
             <div class="hs-log-body">
-<div class="hs-log-group"><div class="hs-log-gtitle">Access Without Car</div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Step 1:</strong> Bus from Bled to Bohinj Jezero (Lake Bohinj). Line 8, runs multiple times/day, ~30 min, ~€4pp.</span></div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Step 2:</strong> From Bohinj bus stop, walk ~2km to the Savica parking area (30 min flat road walk) or take a taxi (~€5, ask at Bohinj bus stop).</span></div><div class="hs-log-row"><span class="hs-log-icon">🎫</span><span><strong>Entrance fee:</strong> ~€3pp at the trail gate. No advance booking.</span></div><div class="hs-log-row"><span class="hs-log-icon">📍</span><span><strong>Trailhead:</strong> The Savica trail begins at the parking/gate area (1.5km past Ukanc village) and follows stone steps up to the waterfall viewpoint.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Timing &amp; Trail Reality</div><div class="hs-log-row"><span class="hs-log-icon">📊</span><span><strong>Distance note:</strong> 3.5km covers the full round trip from the bus stop in Ukanc including the approach road. From the entrance gate to the waterfall: ~0.7km with 500+ stone steps. It's short but steep.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total experience:</strong> 1.5–2 hrs for the waterfall. Budget 4–5 hrs for the full Bohinj day (bus travel + waterfall + swim in the lake).</span></div><div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Route:</strong> Out-and-back. You do not walk behind the waterfall  -  the viewpoint is a ledge looking across at the 78m drop. Most dramatic in morning light.</span></div><div class="hs-log-row"><span class="hs-log-icon">🏊</span><span><strong>After Savica:</strong> Walk or bus back to the main Bohinj lake (Ribčev Laz). The lake is one of the cleanest in the Alps  -  excellent wild swimming in August (~20–22°C water).</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Practical Tips</div><div class="hs-log-row"><span class="hs-log-icon">💡</span><span>Combine with the lake on the same day (Day 25). Savica in the morning, lake swim in the afternoon, bus back to Bled by 5pm.</span></div><div class="hs-log-row"><span class="hs-log-icon">📌</span><span>The stone steps are uneven and can be slippery if wet. Hiking shoes recommended; flip-flops will be uncomfortable on the ascent.</span></div></div>
+<div class="hs-log-group"><div class="hs-log-gtitle">Access Without Car</div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Step 1:</strong> Bus from Bled to Bohinj Jezero (Lake Bohinj). Line 8, runs multiple times/day, ~30 min, ~€4pp.</span></div><div class="hs-log-row"><span class="hs-log-icon">🚌</span><span><strong>Step 2:</strong> From Bohinj bus stop, walk ~2km to the Savica parking area (30 min flat road walk) or take a taxi (~€5, ask at Bohinj bus stop).</span></div><div class="hs-log-row"><span class="hs-log-icon">🎫</span><span><strong>Entrance fee:</strong> ~€3pp at the trail gate. No advance booking.</span></div><div class="hs-log-row"><span class="hs-log-icon">📍</span><span><strong>Trailhead:</strong> The Savica trail begins at the parking/gate area (1.5km past Ukanc village) and follows stone steps up to the waterfall viewpoint.</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Timing &amp; Trail Reality</div><div class="hs-log-row"><span class="hs-log-icon">📊</span><span><strong>Distance note:</strong> 3.5km covers the full round trip from the bus stop in Ukanc including the approach road. From the entrance gate to the waterfall: ~0.7km with 500+ stone steps. It's short but steep.</span></div><div class="hs-log-row"><span class="hs-log-icon">⏱️</span><span><strong>Total experience:</strong> 1.5–2 hrs for the waterfall. Budget 4–5 hrs for the full Bohinj day (bus travel + waterfall + swim in the lake).</span></div><div class="hs-log-row"><span class="hs-log-icon">🔁</span><span><strong>Route:</strong> Out-and-back. You do not walk behind the waterfall  -  the viewpoint is a ledge looking across at the 78m drop. Most dramatic in morning light.</span></div><div class="hs-log-row"><span class="hs-log-icon">🏊</span><span><strong>After Savica:</strong> Walk or bus back to the main Bohinj lake (Ribčev Laz). The lake is one of the cleanest in the Alps  -  excellent wild swimming in August (~20–22°C water).</span></div></div><div class="hs-log-group"><div class="hs-log-gtitle">Practical Tips</div><div class="hs-log-row"><span class="hs-log-icon">💡</span><span>Combine with the lake on the same day (Day 25). Savica in the morning, lake swim in the afternoon, settle in for the night in Bohinj.</span></div><div class="hs-log-row"><span class="hs-log-icon">📌</span><span>The stone steps are uneven and can be slippery if wet. Hiking shoes recommended; flip-flops will be uncomfortable on the ascent.</span></div></div>
             </div>
           </div>
         </div>
       </div>
 
+    
     </div>
   </div>
 </section>
@@ -1713,7 +1832,7 @@ img{max-width:100%;}
           <div class="tip-gtitle">🎒 What to Pack</div>
           <div class="tip-item"><span>🧥</span>Lightweight rain jacket — Alps get afternoon thunderstorms</div>
           <div class="tip-item"><span>👟</span>Hiking shoes with ankle support (not just trail runners)</div>
-          <div class="tip-item"><span>🩳</span>Swimwear — Walchensee, Eibsee, Bohinj are perfect in Aug</div>
+          <div class="tip-item"><span>🩳</span>Swimwear — Eibsee, Oeschinensee, Bohinj are perfect in Aug</div>
           <div class="tip-item"><span>🧣</span>Light down layer — evenings at altitude are cold in August</div>
           <div class="tip-item"><span>💧</span>Reusable bottle — mountain spring water is free everywhere</div>
         </div>
@@ -1724,7 +1843,7 @@ img{max-width:100%;}
 
 <footer>
   <div class="ft">Buon viaggio.</div>
-  <div class="ft-note">30 days · 6 countries · 11 planned hikes · 2 upgrade options · 1 clockwise loop · August</div>
+  <div class="ft-note">30 days · 6 countries · 13 planned hikes · 3 upgrade options · 1 clockwise loop · August</div>
   <div class="ft-note">Milan → Dolomites → Austria → Bavaria → Switzerland → Slovenia → Italy → Milan</div>
 </footer>
 
@@ -1768,23 +1887,26 @@ function toggleOpt(btn) {
 
 // ── LEAFLET MAP ──
 const stops = [
-  { name: 'Milan', lat: 45.464, lng: 9.188, days: 'Days 1–2 & 28–30', meta: '4 nights total · Start & end of the loop', color: '#b5451b' },
-  { name: 'Dolomites (Bolzano)', lat: 46.498, lng: 11.354, days: 'Days 3–5', meta: '3 nights · Alpe di Siusi, Lago di Carezza · Minivan #1', color: '#b5451b' },
-  { name: 'Dolomites (Cortina)', lat: 46.536, lng: 12.135, days: 'Days 6–8', meta: '3 nights · Cinque Torri (Day 6), Lago di Braies (Day 7), Tre Cime (Day 8)', color: '#b5451b' },
-  { name: 'Innsbruck', lat: 47.269, lng: 11.404, days: 'Days 9–10', meta: '2 nights · Nordkette hike · Minivan #2 pickup Day 10 afternoon', color: '#3d5a73' },
-  { name: 'Grossglockner / Heiligenblut', lat: 47.041, lng: 12.843, days: 'Days 11–12', meta: '2 nights · High Alpine Road · Pasterze Glacier · Minivan #2', color: '#3d5a73' },
-  { name: 'Salzburg', lat: 47.798, lng: 13.047, days: 'Day 13', meta: '1 night · Drop Minivan #2 here · Fortress, Mozart, beer halls', color: '#3d5a73' },
-  { name: 'Munich', lat: 48.137, lng: 11.576, days: 'Days 14–17', meta: '4 nights · City base for Bavaria excursions', color: '#c9963a' },
-  { name: 'Eibsee / Zugspitze', lat: 47.456, lng: 10.988, days: 'Day 16', meta: 'Day trip from Munich · Bayern Ticket · Lake circuit + summit cable car', color: '#c9963a' },
-  { name: 'Walchensee', lat: 47.599, lng: 11.339, days: 'Day 17', meta: 'Day trip from Munich · Herzogstand views · Lake swim · Return to Munich', color: '#c9963a' },
-  { name: 'Grindelwald', lat: 46.624, lng: 8.041, days: 'Days 18–19', meta: '1 night · Bachalpsee hike · Eiger views · Depart to Zürich afternoon Day 19', color: '#999' },
-  { name: 'Zürich', lat: 47.374, lng: 8.541, days: 'Day 19', meta: '1 night transit · Old town · Lake promenade · En route to Ljubljana', color: '#999' },
-  { name: 'Ljubljana', lat: 46.056, lng: 14.505, days: 'Days 20–21', meta: '2 nights · Castle, kayaking, riverside cafes', color: '#4a7c59' },
-  { name: 'Postojna Cave', lat: 45.783, lng: 14.203, days: 'Day 22', meta: '1 day · Cave tour + Predjama Castle', color: '#4a7c59' },
-  { name: 'Lake Bled', lat: 46.368, lng: 14.114, days: 'Days 23–24', meta: '2 nights · Island church, Vintgar Gorge', color: '#4a7c59' },
-  { name: 'Lake Bohinj', lat: 46.284, lng: 13.879, days: 'Day 25', meta: '1 night · Savica Falls, wild swimming', color: '#4a7c59' },
-  { name: 'Venice', lat: 45.434, lng: 12.338, days: 'Day 26', meta: '1 night · Grand Canal, Rialto, Cicchetti · Stay Mestre', color: '#b5451b' },
-  { name: 'Verona', lat: 45.439, lng: 10.993, days: 'Day 27', meta: '1 night · Arena, Roman city · Reduced from 2 nights', color: '#b5451b' },
+  { name: 'Milan',                    lat: 45.464, lng:  9.188, days: 'Days 1–2 & 29–30',  meta: '4 nights total · Start & end of the loop',                                                                                              color: '#b5451b' },
+  { name: 'Val Gardena (Ortisei)',    lat: 46.577, lng: 11.675, days: 'Days 3–5',        meta: '3 nights · Seceda ridge · Val di Funes · Alpe di Siusi · Lago di Carezza · Minivan #1',                                     color: '#b5451b' },
+  { name: 'Cortina d\'Ampezzo',       lat: 46.536, lng: 12.135, days: 'Days 6–8',        meta: '3 nights · Cinque Torri + Lagazuoi (Day 6) · Lago di Braies (Day 7) · Tre Cime + Cadini di Misurina (Day 8)', color: '#b5451b' },
+  { name: 'Innsbruck',                lat: 47.269, lng: 11.404, days: 'Days 9–10',       meta: '2 nights · Nordkette hike · Minivan #2 pickup Day 10 afternoon',                                                   color: '#3d5a73' },
+  { name: 'Heiligenblut — Grossglockner', lat: 47.041, lng: 12.843, days: 'Day 11',           meta: '1 night · High Alpine Road · Gamsgrubenweg walk · Minivan #2',                                                       color: '#3d5a73' },
+  { name: 'Werfen (Eisriesenwelt)',   lat: 47.484, lng: 13.183, days: 'Day 12 · en route',  meta: 'World\'s largest ice cave · Cable car + 70-min guided tour · Pre-book timed entry · Direct on A10 Heiligenblut→Salzburg', color: '#3d5a73' },
+  { name: 'Salzburg',                 lat: 47.798, lng: 13.047, days: 'Days 12–13',      meta: '2 nights · Arrive via Werfen · Berchtesgaden day trip Day 13 · Drop Minivan #2 · Fortress, Mozart, Augustinerbrau',       color: '#3d5a73' },
+  { name: 'Berchtesgaden / Königssee', lat: 47.592, lng: 12.985, days: 'Day 13',           meta: 'Day trip from Salzburg · Electric boat to St. Bartholomä · Eagle\'s Nest (Kehlsteinhaus) · Pre-book tickets at kehlsteinhaus.de', color: '#c9963a' },
+  { name: 'Munich',                   lat: 48.137, lng: 11.576, days: 'Days 14–17',      meta: '4 nights · City base for Bavaria excursions',                                                                                   color: '#c9963a' },
+  { name: 'Eibsee / Zugspitze',       lat: 47.456, lng: 10.988, days: 'Day 16',           meta: 'Day trip from Munich · Bayern Ticket · Lake circuit + summit cable car',                                                color: '#c9963a' },
+  { name: 'Herrenchiemsee',           lat: 47.856, lng: 12.416, days: 'Day 17',           meta: 'Day trip from Munich · Prien am Chiemsee train · Ludwig II\'s Versailles homage · Boat to Herreninsel · Optional Fraueninsel', color: '#c9963a' },
+  { name: 'Grindelwald',              lat: 46.624, lng:  8.041, days: 'Day 18',           meta: '1 night · Bachalpsee hike · First Cliff Walk · Eiger north face views',                                             color: '#999'    },
+  { name: 'Oeschinensee',             lat: 46.497, lng:  7.704, days: 'Day 19 · afternoon', meta: 'Day trip from Grindelwald · Train via Interlaken to Kandersteg · CHF 40pp gondola · Mandatory timed reservation at oeschinensee.ch', color: '#999'    },
+  { name: 'Zürich',                   lat: 47.376, lng:  8.541, days: 'Days 19–20',     meta: '1 night · Arrive evening Day 19 · Group farewell dinner · 3 fly ZRH morning Day 20 · 3 continue to Ljubljana',     color: '#999'    },
+  { name: 'Ljubljana',                lat: 46.056, lng: 14.505, days: 'Days 20–21',     meta: '2 nights · Castle, kayaking, riverside cafes',                                                                               color: '#4a7c59' },
+  { name: 'Postojna Cave',            lat: 45.783, lng: 14.203, days: 'Day 22',           meta: '1 day · Cave tour + Predjama Castle',                                                                                         color: '#4a7c59' },
+  { name: 'Lake Bled',                lat: 46.368, lng: 14.114, days: 'Days 23–24',     meta: '2 nights · Island church, Vintgar Gorge',                                                                                   color: '#4a7c59' },
+  { name: 'Lake Bohinj',              lat: 46.284, lng: 13.879, days: 'Day 25',           meta: '1 night · Savica Falls, wild swimming',                                                                                       color: '#4a7c59' },
+  { name: 'Venice',                   lat: 45.434, lng: 12.338, days: 'Day 26',           meta: '1 night · Grand Canal, Rialto, Cicchetti · Stay Mestre',                                                                  color: '#b5451b' },
+  { name: 'Verona',                   lat: 45.439, lng: 10.993, days: 'Day 27',           meta: '1 night · Arena, Roman city',                                                                                                 color: '#b5451b' },
 ];
 
 const map = L.map('tripMap', { zoomControl: true, scrollWheelZoom: false }).setView([47.2, 11.5], 5);
@@ -1839,23 +1961,27 @@ stops.forEach((stop, i) => {
 // ── HIKE LAYER GROUPS (hidden by default) ──
 
 const primaryHikes = [
-  { name: 'Alpe di Siusi',       lat: 46.530, lng: 11.620, day: 'Day 4 · Tue Aug 5',  desc: 'Europe\'s largest high-altitude plateau. Cable car from Ortisei. Easy meadow walks with Dolomite peaks.' },
-  { name: 'Lago di Braies',      lat: 46.694, lng: 12.084, day: 'Day 7 · Fri Aug 8',  desc: 'Pre-booked parking essential. Depart 6:15am. Flat lake circuit (3.5 km). Turquoise water, iconic red boathouse.' },
-  { name: 'Tre Cime di Lavaredo',lat: 46.620, lng: 12.302, day: 'Day 8 · Sat Aug 9',  desc: '9.5 km circuit around the three iconic Dolomite spires. Full dedicated day. Go counterclockwise.' },
-  { name: 'Cinque Torri',        lat: 46.515, lng: 12.008, day: 'Day 6 · Thu Aug 7',  desc: 'En-route stop at Passo Falzarego. 5 rock towers + WWI trenches. Chairlift optional. 2–3 hrs.' },
-  { name: 'Nordkette Ridge Walk',lat: 47.322, lng: 11.388, day: 'Day 10 · Tue Aug 11',desc: 'Cable car from Innsbruck city centre to 2,334m. Ridge walk down to Seegrube above the Inn Valley.' },
-  { name: 'Pasterze Glacier',    lat: 47.075, lng: 12.741, day: 'Day 12 · Thu Aug 13',desc: 'Walk to Austria\'s largest glacier from Franz-Josefs-Höhe. Easy. Combine with Gamsgrube loop (6 km total).' },
-  { name: 'Eibsee Circuit',      lat: 47.455, lng: 10.988, day: 'Day 16 · Mon Aug 17',desc: 'Flat 7 km loop around Germany\'s most beautiful glacial lake. Train from Munich. Zugspitze cable car optional.' },
-  { name: 'Herzogstand Summit',  lat: 47.577, lng: 11.235, day: 'Day 17 · Tue Aug 18',desc: 'Day trip from Munich. Cable car to 1,580m then hike to Herzogstand (1,731m). Continue to Heimgarten for ridge traverse.' },
-  { name: 'Bachalpsee',          lat: 46.669, lng: 8.057,  day: 'Day 19 · Thu Aug 20',desc: 'First gondola from Grindelwald to 2,168m. Walk to Bachalpsee (7 km). Walk to north end for Eiger mirror reflection.' },
-  { name: 'Vintgar Gorge',       lat: 46.394, lng: 14.080, day: 'Day 24 · Tue Aug 25',desc: 'Emerald river gorge near Lake Bled. 3.2 km boardwalk. Arrive at 8am opening — crowds are severe by 9:30am.' },
-  { name: 'Savica Waterfall',    lat: 46.295, lng: 13.853, day: 'Day 25 · Wed Aug 26',desc: 'Forest walk to 78m waterfall at Lake Bohinj. 3 km round trip. Combine with lake swim and Vogel cable car.' },
+  { name: 'Seceda Ridge',          lat: 46.587, lng: 11.741, day: 'Day 4 · Wed Aug 5',       desc: 'Primary Day 4 morning. 2,518m ridge with Odle/Geisler spires directly in front. Gondola from Ortisei (Furnes→Seceda). Walk Rasciesa ridge toward Col Raiser. Best light before 10am.' },
+  { name: 'Val di Funes',          lat: 46.668, lng: 11.749, day: 'Day 4 · Wed Aug 5',       desc: 'Day 4 afternoon. Drive Ortisei → Santa Maddalena. Santa Maddalena Panorama Trail — 1.5 hr loop to iconic church of San Giovanni in Ranui with Odle spires behind. Best light 14:00–17:00. Free.' },
+  { name: 'Alpe di Siusi',         lat: 46.530, lng: 11.620, day: 'Day 5 · Thu Aug 6',       desc: 'Day 5 morning (rebalanced from Day 4). Europe\'s largest high-altitude plateau. Cable car from Ortisei (Mont Sëuc). Easy meadow walks toward Saltria with Sassolungo/Sciliar panorama.' },
+  { name: 'Cinque Torri',          lat: 46.515, lng: 12.008, day: 'Day 6 · Fri Aug 7',       desc: 'En-route stop at Passo Falzarego. 5 rock towers + WWI trenches. Chairlift optional. 2–3 hrs.' },
+  { name: 'Lago di Braies',        lat: 46.694, lng: 12.084, day: 'Day 7 · Sat Aug 8',       desc: 'Pre-booked parking essential at pragserwildsee.it. Depart 6:15am. Flat lake circuit (3.5 km). Turquoise water, iconic red boathouse.' },
+  { name: 'Lago di Sorapis',       lat: 46.564, lng: 12.217, day: 'Day 7 · Sat Aug 8',       desc: 'HIGH-ENERGY OPTIONAL — After Braies return (~11am). Trail 215 from Passo Tre Croci (20 min from Cortina). Milky-turquoise glacial lake with cable-secured ledge sections. 4–5 hr round trip. Commit by 11:30am.' },
+  { name: 'Tre Cime di Lavaredo',  lat: 46.620, lng: 12.302, day: 'Day 8 · Sun Aug 9',       desc: '9.5 km circuit around the three iconic Dolomite spires. Full dedicated day. Walk counterclockwise. Pre-book 07:00 SP49 slot at auronzo.info.' },
+  { name: 'Cadini di Misurina',    lat: 46.601, lng: 12.310, day: 'Day 8 · Sun Aug 9',       desc: 'ADDED — After Tre Cime loop (~11:30am). Trail 117 from Rifugio Auronzo. 1.5–2 hr round trip. Iconic spired-tower composition. No extra cost (SP49 valid 12 hrs). Final exposed stretch optional.' },
+  { name: 'Nordkette Ridge Walk',  lat: 47.322, lng: 11.388, day: 'Day 10 · Tue Aug 11',     desc: 'Cable car from Innsbruck city centre to 2,334m. Ridge walk Hafelekar→Seegrube above the Inn Valley.' },
+  { name: 'Gamsgrubenweg',         lat: 47.075, lng: 12.741, day: 'Day 11 · Wed Aug 12',     desc: 'Franz-Josefs-Höhe terrace and Gamsgrubenweg nature trail. Views across Pasterze moraine (funicular permanently closed 2025). Easy to moderate, 6 km total. Day 11 is 1-night Heiligenblut stay.' },
+  { name: 'Eibsee Circuit',        lat: 47.455, lng: 10.988, day: 'Day 16 · Mon Aug 17',     desc: 'Flat 7 km loop around Germany\'s most beautiful glacial lake. Train from Munich. Zugspitze cable car — pre-book at zugspitze.de (August walk-up queue 2–3 hrs).' },
+  { name: 'Bachalpsee',            lat: 46.669, lng:  8.057, day: 'Day 19 · Thu Aug 20',     desc: 'First gondola from Grindelwald to 2,168m. Walk to Bachalpsee (7 km). Walk to north end for Eiger mirror reflection. Pre-book at jungfrau.ch.' },
+  { name: 'Männlichen Ridge',      lat: 46.628, lng:  7.932, day: 'Day 19 · Thu Aug 20',     desc: 'ALTERNATIVE to Oeschinensee. Eiger Express to Männlichen → panorama trail to Kleine Scheidegg (1h 20 min, easy, mostly downhill). Eiger/Mönch/Jungfrau face-on views. Saves ~3 hrs vs Oeschinensee train chain.' },
+  { name: 'Vintgar Gorge',         lat: 46.394, lng: 14.080, day: 'Day 24 · Tue Aug 25',     desc: 'Emerald river gorge near Lake Bled. 3.2 km boardwalk. Arrive at 8am opening — crowds are severe by 9:30am.' },
+  { name: 'Savica Waterfall',      lat: 46.295, lng: 13.853, day: 'Day 25 · Wed Aug 26',     desc: 'Forest walk to 78m waterfall at Lake Bohinj. 3 km round trip. Combine with lake swim and Vogel cable car.' },
 ];
 
 const upgradeHikes = [
-  { name: 'Seceda Ridge',        lat: 46.587, lng: 11.741, day: 'Day 4 · Upgrade Option', desc: '2,500m ridge with Odle/Geisler spires directly in front. Same gondola village (Ortisei) as Alpe di Siusi.' },
-  { name: 'Lagazuoi Summit',     lat: 46.527, lng: 12.009, day: 'Day 6 · Upgrade Option', desc: '360° Dolomites panorama at 2,778m. Cable car from Passo Falzarego — same car park as Cinque Torri. WWI tunnels.' },
-  { name: 'Edelweisspitze',      lat: 47.072, lng: 12.835, day: 'Day 11 · Drive Stop',    desc: '2,577m summit off the Grossglockner road. Spur road + 5 min walk. Better 360° view than Franz-Josefs-Höhe terrace.' },
+  { name: 'Lagazuoi Summit',    lat: 46.527, lng: 12.009, day: 'Day 6 · Upgrade Option', desc: '360° Dolomites panorama at 2,778m. Cable car from Passo Falzarego — same car park as Cinque Torri. WWI tunnels accessible on descent.' },
+  { name: 'Edelweisspitze',     lat: 47.072, lng: 12.835, day: 'Day 11 · Drive Stop',    desc: '2,577m summit off the Grossglockner road. Spur road + 5 min walk. Better 360° view than Franz-Josefs-Höhe terrace.' },
+  { name: 'Neuschwanstein',     lat: 47.558, lng: 10.750, day: 'Day 15 · Optional Alt',  desc: 'Optional full-day alternative (high travel effort). Train München→Füssen (2h) + bus to Hohenschwangau. Marien brücke view (free) or interior tour. Book months ahead at neuschwanstein-tickets.de. 10–11 hrs round trip.' },
 ];
 
 // Icon builders
